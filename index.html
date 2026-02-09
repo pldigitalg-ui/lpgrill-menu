@@ -1,1 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LP Grill - Cardápio</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#0b0b0b;
+color:#fff;
+}
+
+header{
+background:#000;
+padding:20px;
+text-align:center;
+border-bottom:3px solid #ff1e1e;
+}
+
+header h1{
+color:#ff1e1e;
+margin:0;
+}
+
+.menu{
+display:flex;
+justify-content:center;
+gap:20px;
+padding:15px;
+background:#111;
+flex-wrap:wrap;
+}
+
+.menu a{
+color:#fff;
+text-decoration:none;
+font-weight:bold;
+padding:8px 15px;
+border-radius:6px;
+transition:0.3s;
+}
+
+.menu a:hover{
+background:#ff1e1e;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#151515;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+border:1px solid #222;
+}
+
+.card h2{
+color:#ff1e1e;
+margin-top:0;
+}
+
+.item{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+border-bottom:1px solid #222;
+}
+
+.item:last-child{
+border:none;
+}
+
+.whatsapp{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#25d366;
+color:white;
+padding:15px 22px;
+border-radius:50px;
+font-weight:bold;
+text-decoration:none;
+box-shadow:0 0 15px rgba(0,0,0,0.4);
+}
+
+footer{
+text-align:center;
+padding:20px;
+color:#777;
+font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🔥 LP GRILL</h1>
+<p>Cardápio do Dia</p>
+</header>
+
+<nav class="menu">
+<a href="#cardapio">Cardápio</a>
+<a href="#bebidas">Bebidas</a>
+<a href="#promocoes">Promoções</a>
+<a href="#contato">Contato</a>
+</nav>
+
+<div class="container">
+
+<div class="card" id="cardapio">
+<h2>🍖 Cardápio do Dia</h2>
+
+<div class="item">
+<span>Prato Feito Churrasco</span>
+<strong>R$ 25,00</strong>
+</div>
+
+<div class="item">
+<span>Frango Grelhado + Acompanhamentos</span>
+<strong>R$ 22,00</strong>
+</div>
+
+<div class="item">
+<span>Marmitex Completa</span>
+<strong>R$ 18,00</strong>
+</div>
+
+</div>
+
+<div class="card" id="bebidas">
+<h2>🥤 Bebidas</h2>
+
+<div class="item">
+<span>Coca-Cola Lata</span>
+<strong>R$ 6,00</strong>
+</div>
+
+<div class="item">
+<span>Suco Natural</span>
+<strong>R$ 7,00</strong>
+</div>
+
+</div>
+
+<div class="card" id="promocoes">
+<h2>🔥 Promoções</h2>
+<p>Hoje: Marmitex + Coca por R$ 22,00</p>
+</div>
+
+<div class="card" id="contato">
+<h2>📍 Contato</h2>
+<p>Pedidos somente pelo WhatsApp</p>
+</div>
+
+</div>
+
+<a class="whatsapp" href="https://wa.me/5531998064556" target="_blank">
+Pedir no WhatsApp
+</a>
+
+<footer>
+LP Grill © 2026
+</footer>
+
+</body>
+</html>
 
