@@ -1,175 +1,826 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LP Grill - Cardápio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LP Grill - Cardápio & Pedido</title>
 
-<style>
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:#0b0b0b;
-color:#fff;
-}
+  <style>
+    :root{
+      --bg:#0b0b0b;
+      --panel:#141414;
+      --panel2:#101010;
+      --text:#ffffff;
+      --muted:#bdbdbd;
+      --red:#ff1e1e;
+      --red2:#b80000;
+      --line:#242424;
+      --good:#25d366;
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit}
 
-header{
-background:#000;
-padding:20px;
-text-align:center;
-border-bottom:3px solid #ff1e1e;
-}
+    /* HEADER */
+    header{
+      position:relative;
+      background:#000;
+      border-bottom:2px solid var(--red);
+      overflow:hidden;
+    }
+    .hero{
+      position:relative;
+      padding:22px 18px 18px;
+      display:flex;
+      gap:16px;
+      align-items:center;
+      justify-content:space-between;
+      max-width:1100px;
+      margin:0 auto;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.92), rgba(0,0,0,.65)),
+        url("mockup.png");
+      background-size:cover;
+      background-position:center;
+      filter:saturate(1.05);
+      transform:scale(1.02);
+      z-index:0;
+    }
+    .hero > *{position:relative; z-index:1;}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:260px;
+    }
+    .brand img{
+      height:54px;
+      width:auto;
+      border-radius:10px;
+      box-shadow: var(--shadow);
+      background:#000;
+      padding:6px;
+    }
+    .brand .title{
+      line-height:1.1;
+    }
+    .brand .title h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.5px;
+      color:#fff;
+    }
+    .brand .title p{
+      margin:4px 0 0;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .hero-right{
+      text-align:right;
+      max-width:420px;
+    }
+    .hero-right .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      background:rgba(0,0,0,.35);
+      font-size:12px;
+      color:#eaeaea;
+    }
+    .hero-right .sub{
+      margin:10px 0 0;
+      color:#d6d6d6;
+      font-size:13px;
+    }
 
-header h1{
-color:#ff1e1e;
-margin:0;
-}
+    /* NAV */
+    nav{
+      background: #0f0f0f;
+      border-top:1px solid rgba(255,255,255,.06);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav-inner{
+      max-width:1100px;
+      margin:0 auto;
+      padding:10px 14px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+    .chip{
+      text-decoration:none;
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+      color:#fff;
+      font-weight:700;
+      font-size:13px;
+      transition:.2s;
+    }
+    .chip:hover{background:rgba(255,30,30,.15); border-color:rgba(255,30,30,.55)}
+    .chip.red{background:rgba(255,30,30,.18); border-color:rgba(255,30,30,.65)}
 
-.menu{
-display:flex;
-justify-content:center;
-gap:20px;
-padding:15px;
-background:#111;
-flex-wrap:wrap;
-}
+    /* LAYOUT */
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px 14px 110px;
+      display:grid;
+      grid-template-columns: 1.25fr .85fr;
+      gap:16px;
+    }
+    @media (max-width: 980px){
+      .wrap{grid-template-columns:1fr}
+      .hero{flex-direction:column; align-items:flex-start}
+      .hero-right{text-align:left; max-width:unset; width:100%}
+    }
 
-.menu a{
-color:#fff;
-text-decoration:none;
-font-weight:bold;
-padding:8px 15px;
-border-radius:6px;
-transition:0.3s;
-}
+    .card{
+      background:linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow: var(--shadow);
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:16px;
+      color:var(--red);
+      letter-spacing:.2px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .muted{color:var(--muted); font-size:13px; line-height:1.35}
+    .hr{height:1px; background:var(--line); margin:14px 0}
 
-.menu a:hover{
-background:#ff1e1e;
-}
+    /* OPTIONS */
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    .opt{
+      flex: 1 1 180px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:12px;
+      padding:12px;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .opt:hover{border-color:rgba(255,30,30,.55); background:rgba(255,30,30,.08)}
+    .opt.active{
+      border-color:rgba(255,30,30,.9);
+      background:rgba(255,30,30,.12);
+      box-shadow: 0 10px 24px rgba(255,30,30,.08);
+    }
+    .opt .top{
+      display:flex; justify-content:space-between; gap:10px; align-items:center;
+      font-weight:800;
+    }
+    .priceTag{
+      color:#fff;
+      background:rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.10);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .opt small{display:block; margin-top:6px; color:var(--muted); font-weight:600}
 
-.container{
-max-width:900px;
-margin:auto;
-padding:20px;
-}
+    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    @media (max-width: 560px){ .grid2{grid-template-columns:1fr} }
 
-.card{
-background:#151515;
-padding:20px;
-border-radius:12px;
-margin-bottom:20px;
-border:1px solid #222;
-}
+    /* CHECKLIST */
+    .checklist{display:grid; gap:8px}
+    .check{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:12px;
+    }
+    .check label{display:flex; gap:10px; align-items:center; cursor:pointer; width:100%}
+    .check input{transform:scale(1.15)}
+    .check .right{color:var(--muted); font-size:12px; font-weight:700}
 
-.card h2{
-color:#ff1e1e;
-margin-top:0;
-}
+    /* FORM */
+    .field{display:grid; gap:6px; margin:10px 0}
+    .field label{font-size:12px; color:#dcdcdc; font-weight:800}
+    .field input, .field textarea, .field select{
+      width:100%;
+      padding:11px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.25);
+      color:#fff;
+      outline:none;
+    }
+    .field textarea{min-height:90px; resize:vertical}
+    .hint{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+      line-height:1.35;
+    }
 
-.item{
-display:flex;
-justify-content:space-between;
-padding:10px 0;
-border-bottom:1px solid #222;
-}
+    /* SUMMARY */
+    .summary{
+      position:sticky;
+      top:14px;
+      display:grid;
+      gap:12px;
+    }
+    .totalBox{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,30,30,.35);
+      background:rgba(255,30,30,.10);
+    }
+    .totalBox .t1{font-weight:900; color:#fff}
+    .totalBox .t2{font-weight:900; font-size:20px; color:#fff}
+    .miniList{
+      margin:0;
+      padding-left:18px;
+      color:#dcdcdc;
+      font-size:13px;
+      line-height:1.35;
+    }
 
-.item:last-child{
-border:none;
-}
+    .btn{
+      width:100%;
+      border:none;
+      padding:14px 16px;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .btn-wa{
+      background: var(--good);
+      color:#062b14;
+      box-shadow: 0 14px 30px rgba(37, 211, 102, .18);
+    }
+    .btn-wa:hover{filter:brightness(1.05)}
+    .btn-ghost{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:#fff;
+    }
+    .btn-ghost:hover{border-color:rgba(255,30,30,.55); background:rgba(255,30,30,.10)}
+    .warn{
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.25);
+      color:#eaeaea;
+      font-size:12px;
+      line-height:1.35;
+    }
 
-.whatsapp{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#25d366;
-color:white;
-padding:15px 22px;
-border-radius:50px;
-font-weight:bold;
-text-decoration:none;
-box-shadow:0 0 15px rgba(0,0,0,0.4);
-}
-
-footer{
-text-align:center;
-padding:20px;
-color:#777;
-font-size:14px;
-}
-</style>
+    /* Floating WA */
+    .wa-float{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      z-index:50;
+      text-decoration:none;
+      background:var(--good);
+      color:#062b14;
+      padding:13px 18px;
+      border-radius:999px;
+      font-weight:900;
+      box-shadow: 0 14px 30px rgba(37, 211, 102, .22);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .wa-float small{font-weight:800; opacity:.85}
+  </style>
 </head>
 
 <body>
 
 <header>
-<h1>🔥 LP GRILL</h1>
-<p>Cardápio do Dia</p>
+  <div class="hero">
+    <div class="brand">
+      <img src="LOGO.PNG" alt="LP Grill Logo">
+      <div class="title">
+        <h1>LP GRILL</h1>
+        <p>Cardápio & Pedido pelo WhatsApp</p>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="badge">⏱ Prazo médio de entrega: <b>30 minutos</b> • 🚚 Entrega fixa: <b>R$ 5,00</b></div>
+      <div class="sub">Escolha um marmitex pronto (R$ 18) ou monte o seu prato (R$ 21). Adicionais de carne: +R$ 4 cada.</div>
+    </div>
+  </div>
 </header>
 
-<nav class="menu">
-<a href="#cardapio">Cardápio</a>
-<a href="#bebidas">Bebidas</a>
-<a href="#promocoes">Promoções</a>
-<a href="#contato">Contato</a>
+<nav>
+  <div class="nav-inner">
+    <a class="chip" href="#pedido">Fazer Pedido</a>
+    <a class="chip" href="#cardapios">Cardápios</a>
+    <a class="chip" href="#bebidas">Refrigerantes</a>
+    <a class="chip red" href="#entrega">Entrega/Retirada</a>
+  </div>
 </nav>
 
-<div class="container">
+<div class="wrap">
 
-<div class="card" id="cardapio">
-<h2>🍖 Cardápio do Dia</h2>
+  <!-- LEFT -->
+  <div>
 
-<div class="item">
-<span>Prato Feito Churrasco</span>
-<strong>R$ 25,00</strong>
+    <!-- Pedido -->
+    <div class="card" id="pedido">
+      <h2>🧾 Monte seu pedido</h2>
+      <p class="muted">
+        Escolha uma opção abaixo. Se quiser <b>montar seu prato</b>, selecione os itens dos cardápios e/ou escreva extras.
+        <br><br>
+        <b>Obs:</b> Ao montar seu prato, o valor do marmitex fica <b>R$ 18 + R$ 3 = R$ 21</b>.
+      </p>
+
+      <div class="row" style="margin-top:12px">
+        <div class="opt" id="opt-dia" onclick="setTipo('dia')">
+          <div class="top">
+            <span>🍛 Marmitex do Dia (pronto)</span>
+            <span class="priceTag">R$ 18,00</span>
+          </div>
+          <small>Cardápio do dia já montado.</small>
+        </div>
+
+        <div class="opt" id="opt-classico" onclick="setTipo('classico')">
+          <div class="top">
+            <span>🥘 Marmitex Clássico (pronto)</span>
+            <span class="priceTag">R$ 18,00</span>
+          </div>
+          <small>Clássico já montado.</small>
+        </div>
+
+        <div class="opt" id="opt-montado" onclick="setTipo('montado')">
+          <div class="top">
+            <span>🧩 Montar meu prato</span>
+            <span class="priceTag">R$ 21,00</span>
+          </div>
+          <small>R$ 18 + R$ 3 (montagem).</small>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="grid2">
+        <div>
+          <h2 id="cardapios" style="margin-top:0">📋 Cardápios</h2>
+          <p class="muted" style="margin-top:-2px">
+            <b>Se você escolher “Montar meu prato”</b>, marque os itens que deseja (misture os dois cardápios).
+          </p>
+
+          <div class="card" style="padding:12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.08)">
+            <h2 style="margin:0 0 10px; font-size:14px; color:#fff">🍛 Cardápio do Dia</h2>
+            <div class="checklist" id="list-dia">
+              <!-- items inserted by JS -->
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="card" style="padding:12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.08)">
+            <h2 style="margin:0 0 10px; font-size:14px; color:#fff">🥘 Cardápio Clássico</h2>
+            <div class="checklist" id="list-classico">
+              <!-- items inserted by JS -->
+            </div>
+          </div>
+
+          <div class="field">
+            <label>✍️ Caso queira montar seu prato, escreva os itens que deseja adicionar</label>
+            <textarea id="txtExtras" placeholder="Ex: mais salada, sem macarrão, pouco feijão, etc..."></textarea>
+            <div class="hint">Você pode misturar os dois cardápios. Se escolher “Montar meu prato”, o sistema já soma +R$ 3.</div>
+          </div>
+
+        </div>
+
+        <div>
+          <h2 style="margin-top:0">🥩 Adicionais de carne (+R$ 4 cada)</h2>
+          <div class="checklist" id="list-carnes">
+            <!-- meats by JS -->
+          </div>
+
+          <div class="hr"></div>
+
+          <h2 id="bebidas" style="margin-top:0">🥤 Refrigerantes</h2>
+          <div class="field">
+            <label>Escolha um refrigerante</label>
+            <select id="selBebida">
+              <option value="0">Nenhum</option>
+              <option value="10">Coca-Cola 1L — R$ 10</option>
+              <option value="10">Fanta 1L — R$ 10</option>
+              <option value="18">Coca-Cola 2L — R$ 18</option>
+            </select>
+          </div>
+
+          <div class="hr"></div>
+
+          <h2 id="entrega" style="margin-top:0">🚚 Entrega / Retirada</h2>
+          <div class="row">
+            <div class="opt" id="opt-retirada" onclick="setEntrega('retirada')">
+              <div class="top">
+                <span>📍 Retirada no local</span>
+                <span class="priceTag">GRÁTIS</span>
+              </div>
+              <small>Você retira no restaurante.</small>
+            </div>
+
+            <div class="opt" id="opt-entrega" onclick="setEntrega('entrega')">
+              <div class="top">
+                <span>🏍️ Entrega</span>
+                <span class="priceTag">+ R$ 5,00</span>
+              </div>
+              <small>Taxa fixa de entrega.</small>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <h2 style="margin-top:0">📍 Dados para entrega</h2>
+          <div class="field">
+            <label>Seu nome</label>
+            <input id="inpNome" placeholder="Ex: João Silva" />
+          </div>
+          <div class="field">
+            <label>Número de telefone</label>
+            <input id="inpFone" placeholder="Ex: (31) 9xxxx-xxxx" />
+          </div>
+          <div class="field">
+            <label>Endereço completo</label>
+            <input id="inpEndereco" placeholder="Rua, número, bairro, cidade" />
+          </div>
+          <div class="field">
+            <label>Ponto de referência</label>
+            <input id="inpRef" placeholder="Ex: perto da padaria / portão azul" />
+          </div>
+
+          <div class="warn">
+            ✅ Confirme tudo antes de enviar. O pedido vai direto para o WhatsApp.  
+            <br>⏱ Prazo médio: <b>30 minutos</b>.
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT (Summary) -->
+  <div class="summary">
+    <div class="card">
+      <h2>💰 Resumo do pedido</h2>
+
+      <div class="totalBox">
+        <div>
+          <div class="t1">Total</div>
+          <div class="muted">Soma automática (marmitex + adicionais + bebida + entrega)</div>
+        </div>
+        <div class="t2" id="total">R$ 0,00</div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="muted" style="font-weight:900; margin-bottom:6px;">Selecionados:</div>
+      <ul class="miniList" id="miniList"></ul>
+
+      <div class="hr"></div>
+
+      <button class="btn btn-wa" onclick="enviarWhats()">
+        Enviar pedido no WhatsApp
+      </button>
+
+      <div style="height:10px"></div>
+
+      <button class="btn btn-ghost" onclick="limparTudo()">
+        Limpar seleção
+      </button>
+
+      <div class="hint">
+        * Marmitex pronto: <b>R$ 18</b> • Montado: <b>R$ 21</b> • Adicional de carne: <b>+R$ 4</b> • Entrega: <b>+R$ 5</b>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div class="item">
-<span>Frango Grelhado + Acompanhamentos</span>
-<strong>R$ 22,00</strong>
-</div>
-
-<div class="item">
-<span>Marmitex Completa</span>
-<strong>R$ 18,00</strong>
-</div>
-
-</div>
-
-<div class="card" id="bebidas">
-<h2>🥤 Bebidas</h2>
-
-<div class="item">
-<span>Coca-Cola Lata</span>
-<strong>R$ 6,00</strong>
-</div>
-
-<div class="item">
-<span>Suco Natural</span>
-<strong>R$ 7,00</strong>
-</div>
-
-</div>
-
-<div class="card" id="promocoes">
-<h2>🔥 Promoções</h2>
-<p>Hoje: Marmitex + Coca por R$ 22,00</p>
-</div>
-
-<div class="card" id="contato">
-<h2>📍 Contato</h2>
-<p>Pedidos somente pelo WhatsApp</p>
-</div>
-
-</div>
-
-<a class="whatsapp" href="https://wa.me/5531998064556" target="_blank">
-Pedir no WhatsApp
+<a class="wa-float" href="#pedido">
+  🧾 <span>Fazer pedido</span> <small>agora</small>
 </a>
 
-<footer>
-LP Grill © 2026
-</footer>
+<script>
+  // ===== CONFIG =====
+  const WHATSAPP_NUMBER = "5531998064556";
+
+  const BASE_MARMITEX = 18;
+  const MONTA_SOBRETAXA = 3; // montar seu prato
+  const ENTREGA_TAXA = 5;
+  const CARNE_ADICIONAL = 4;
+
+  const itensDia = [
+    "Arroz",
+    "Feijão",
+    "Macarrão",
+    "Batata frita",
+    "Frango assado",
+    "Salada (alface e tomate)"
+  ];
+
+  const itensClassico = [
+    "Arroz",
+    "Feijão",
+    "Frango com quiabo",
+    "Angu",
+    "Couve",
+    "Salada (tomate)"
+  ];
+
+  const carnes = [
+    "Bife de boi",
+    "Bife de porco",
+    "Omelete"
+  ];
+
+  // ===== STATE =====
+  let tipo = "dia";        // dia | classico | montado
+  let entrega = "retirada"; // retirada | entrega
+
+  // ===== INIT =====
+  function renderList(containerId, items, prefix){
+    const el = document.getElementById(containerId);
+    el.innerHTML = "";
+    items.forEach((name, idx) => {
+      const id = `${prefix}_${idx}`;
+      el.innerHTML += `
+        <div class="check">
+          <label for="${id}">
+            <input type="checkbox" id="${id}" data-name="${escapeHtml(name)}" onchange="calc()" />
+            <span>${escapeHtml(name)}</span>
+          </label>
+          <span class="right">item</span>
+        </div>
+      `;
+    });
+  }
+
+  function renderMeats(){
+    const el = document.getElementById("list-carnes");
+    el.innerHTML = "";
+    carnes.forEach((name, idx) => {
+      const id = `carne_${idx}`;
+      el.innerHTML += `
+        <div class="check">
+          <label for="${id}">
+            <input type="checkbox" id="${id}" data-name="${escapeHtml(name)}" onchange="calc()" />
+            <span>${escapeHtml(name)}</span>
+          </label>
+          <span class="right">+ R$ ${CARNE_ADICIONAL.toFixed(2).replace(".", ",")}</span>
+        </div>
+      `;
+    });
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, (m) => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
+  }
+
+  renderList("list-dia", itensDia, "dia");
+  renderList("list-classico", itensClassico, "classico");
+  renderMeats();
+
+  setTipo("dia");
+  setEntrega("retirada");
+
+  // ===== UI SETTERS =====
+  function setTipo(value){
+    tipo = value;
+
+    // highlight
+    document.getElementById("opt-dia").classList.toggle("active", tipo==="dia");
+    document.getElementById("opt-classico").classList.toggle("active", tipo==="classico");
+    document.getElementById("opt-montado").classList.toggle("active", tipo==="montado");
+
+    // If not montado, we can still allow marking items (optional),
+    // but we will only add the +3 when montado is chosen.
+    calc();
+  }
+
+  function setEntrega(value){
+    entrega = value;
+
+    document.getElementById("opt-retirada").classList.toggle("active", entrega==="retirada");
+    document.getElementById("opt-entrega").classList.toggle("active", entrega==="entrega");
+
+    calc();
+  }
+
+  // ===== CALC =====
+  function moeda(v){
+    return "R$ " + v.toFixed(2).replace(".", ",");
+  }
+
+  function getCheckedNames(prefix, count){
+    const names = [];
+    for(let i=0;i<count;i++){
+      const cb = document.getElementById(`${prefix}_${i}`);
+      if(cb && cb.checked) names.push(cb.dataset.name);
+    }
+    return names;
+  }
+
+  function getCheckedMeats(){
+    const names = [];
+    for(let i=0;i<carnes.length;i++){
+      const cb = document.getElementById(`carne_${i}`);
+      if(cb && cb.checked) names.push(cb.dataset.name);
+    }
+    return names;
+  }
+
+  function calc(){
+    // base marmitex
+    let total = BASE_MARMITEX;
+
+    // montagem
+    if(tipo === "montado") total += MONTA_SOBRETAXA;
+
+    // bebidas
+    const bebidaValor = Number(document.getElementById("selBebida").value || 0);
+    total += bebidaValor;
+
+    // entrega
+    if(entrega === "entrega") total += ENTREGA_TAXA;
+
+    // carnes adicionais
+    const meats = getCheckedMeats();
+    total += meats.length * CARNE_ADICIONAL;
+
+    // resumo
+    document.getElementById("total").innerText = moeda(total);
+
+    const mini = document.getElementById("miniList");
+    mini.innerHTML = "";
+
+    const tipoTxt = (tipo==="dia") ? "Marmitex do Dia (pronto)" :
+                    (tipo==="classico") ? "Marmitex Clássico (pronto)" :
+                    "Montar meu prato";
+
+    addLi(mini, `🍱 ${tipoTxt} — ${moeda(BASE_MARMITEX + (tipo==="montado" ? MONTA_SOBRETAXA : 0))}`);
+
+    if(tipo === "montado"){
+      const diaSel = getCheckedNames("dia", itensDia.length);
+      const claSel = getCheckedNames("classico", itensClassico.length);
+      const allSel = [...diaSel, ...claSel];
+
+      if(allSel.length){
+        addLi(mini, "✅ Itens marcados: " + allSel.join(", "));
+      } else {
+        addLi(mini, "✅ Itens marcados: (nenhum marcado ainda)");
+      }
+
+      const extras = document.getElementById("txtExtras").value.trim();
+      if(extras) addLi(mini, "✍️ Observações: " + extras);
+    }
+
+    if(meats.length){
+      addLi(mini, `🥩 Adicionais: ${meats.join(", ")} — ${moeda(meats.length * CARNE_ADICIONAL)}`);
+    }
+
+    const bebidaTxt = document.getElementById("selBebida").selectedOptions[0].text;
+    if(bebidaValor > 0) addLi(mini, `🥤 ${bebidaTxt}`);
+
+    if(entrega === "entrega") addLi(mini, `🚚 Entrega — ${moeda(ENTREGA_TAXA)}`);
+    else addLi(mini, "📍 Retirada no local — grátis");
+  }
+
+  function addLi(ul, text){
+    const li = document.createElement("li");
+    li.textContent = text;
+    ul.appendChild(li);
+  }
+
+  // ===== WHATSAPP SEND =====
+  function enviarWhats(){
+    const nome = document.getElementById("inpNome").value.trim();
+    const fone = document.getElementById("inpFone").value.trim();
+    const endereco = document.getElementById("inpEndereco").value.trim();
+    const ref = document.getElementById("inpRef").value.trim();
+
+    // validação simples
+    if(!fone || !endereco || !ref){
+      alert("Preencha: telefone, endereço e ponto de referência.");
+      return;
+    }
+
+    // recalcula total atual
+    const totalTxt = document.getElementById("total").innerText;
+
+    const tipoTxt = (tipo==="dia") ? "Marmitex do Dia (pronto)" :
+                    (tipo==="classico") ? "Marmitex Clássico (pronto)" :
+                    "Montar meu prato (R$ 18 + R$ 3)";
+
+    const meats = getCheckedMeats();
+    const bebidaSel = document.getElementById("selBebida");
+    const bebidaValor = Number(bebidaSel.value || 0);
+    const bebidaTxt = bebidaSel.selectedOptions[0].text;
+
+    let msg = "";
+    msg += "🧾 *PEDIDO - LP GRILL*%0A";
+    if(nome) msg += "👤 Nome: " + encodeURIComponent(nome) + "%0A";
+    msg += "📞 Telefone: " + encodeURIComponent(fone) + "%0A%0A";
+
+    msg += "🍱 Opção: " + encodeURIComponent(tipoTxt) + "%0A";
+
+    if(tipo === "montado"){
+      const diaSel = getCheckedNames("dia", itensDia.length);
+      const claSel = getCheckedNames("classico", itensClassico.length);
+      const allSel = [...diaSel, ...claSel];
+
+      msg += "✅ Itens marcados: " + encodeURIComponent(allSel.length ? allSel.join(", ") : "nenhum") + "%0A";
+
+      const extras = document.getElementById("txtExtras").value.trim();
+      if(extras) msg += "✍️ Observações: " + encodeURIComponent(extras) + "%0A";
+      msg += "%0A";
+    }
+
+    if(meats.length){
+      msg += "🥩 Adicionais (+R$ 4 cada): " + encodeURIComponent(meats.join(", ")) + "%0A";
+    }
+
+    if(bebidaValor > 0){
+      msg += "🥤 Refrigerante: " + encodeURIComponent(bebidaTxt) + "%0A";
+    }
+
+    msg += (entrega === "entrega")
+      ? "🚚 Entrega: +R$ 5,00%0A"
+      : "📍 Retirada: grátis%0A";
+
+    msg += "%0A📍 Endereço: " + encodeURIComponent(endereco) + "%0A";
+    msg += "🧭 Referência: " + encodeURIComponent(ref) + "%0A%0A";
+
+    msg += "💰 *Total: " + encodeURIComponent(totalTxt) + "*%0A";
+    msg += "⏱ Prazo médio: 30 minutos";
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+    window.open(url, "_blank");
+  }
+
+  // ===== RESET =====
+  function limparTudo(){
+    setTipo("dia");
+    setEntrega("retirada");
+    document.getElementById("selBebida").value = "0";
+    document.getElementById("txtExtras").value = "";
+
+    // uncheck all
+    for(let i=0;i<itensDia.length;i++) document.getElementById(`dia_${i}`).checked = false;
+    for(let i=0;i<itensClassico.length;i++) document.getElementById(`classico_${i}`).checked = false;
+    for(let i=0;i<carnes.length;i++) document.getElementById(`carne_${i}`).checked = false;
+
+    document.getElementById("inpNome").value = "";
+    document.getElementById("inpFone").value = "";
+    document.getElementById("inpEndereco").value = "";
+    document.getElementById("inpRef").value = "";
+
+    calc();
+    window.location.hash = "#pedido";
+  }
+
+  // calc initial
+  document.getElementById("selBebida").addEventListener("change", calc);
+  document.getElementById("txtExtras").addEventListener("input", () => {
+    // só recalcular para atualizar o resumo, não muda preço
+    calc();
+  });
+  calc();
+</script>
 
 </body>
 </html>
-
