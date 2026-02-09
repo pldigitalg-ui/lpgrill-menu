@@ -1,1523 +1,284 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>LP Grill — Cardápio & Pedido</title>
+<title>restaurante lp-grill — App de Pedidos</title>
 
-<!-- PWA-ish (sem arquivo extra) -->
 <meta name="theme-color" content="#0b0b0b"/>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="LP Grill">
 
 <style>
-  :root{
-    --bg:#0b0b0b;
-    --panel:#141414;
-    --panel2:#101010;
-    --text:#ffffff;
-    --muted:#bdbdbd;
-    --line:#242424;
+:root{
+  --bg:#0b0b0b;
+  --panel:#141414;
+  --text:#fff;
+  --muted:#bdbdbd;
+  --red:#ff1e1e;
+  --good:#25d366;
+  --radius:18px;
+  --shadow:0 18px 50px rgba(0,0,0,.45);
+  --glow:0 0 18px rgba(255,30,30,.18);
+  --topbarH:84px;
+}
 
-    --red:#ff1e1e;
-    --good:#25d366;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:var(--bg);
+  color:var(--text);
+}
 
-    --shadow: 0 18px 50px rgba(0,0,0,.45);
-    --radius:18px;
+/* mockup marca d'água */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url("mockup.png") center/cover no-repeat;
+  opacity:.08;
+  pointer-events:none;
+  z-index:-1;
+}
 
-    --glow: 0 0 18px rgba(255,30,30,.18), 0 0 42px rgba(255,30,30,.08);
-    --glowStrong: 0 0 22px rgba(255,30,30,.28), 0 0 70px rgba(255,30,30,.10);
+/* TOPBAR APP */
+.topbar{
+  position:fixed;
+  top:0; left:0; right:0;
+  height:var(--topbarH);
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:0 18px;
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  z-index:999;
+}
+.logo{
+  height:64px;
+  border-radius:14px;
+}
+.brandName{
+  font-weight:900;
+  letter-spacing:.5px;
+  font-size:15px;
+}
 
-    --topbarH:84px;
-  }
+/* STATUS BAR */
+.statusBar{
+  margin-top:var(--topbarH);
+  padding:10px 16px;
+  font-weight:800;
+  text-align:center;
+}
+.status-open{background:#0e2b16;color:#7dffb0;}
+.status-closed{background:#2b0e0e;color:#ff9c9c;}
 
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{
-    margin:0;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    background: radial-gradient(1200px 600px at 10% -10%, rgba(255,30,30,.14), transparent 60%),
-                radial-gradient(900px 500px at 90% 10%, rgba(255,30,30,.08), transparent 55%),
-                var(--bg);
-    color:var(--text);
-    overflow-x:hidden;
-  }
+/* HOME APP CARDS */
+.home{
+  padding:20px;
+  display:grid;
+  gap:18px;
+}
+.appCard{
+  padding:22px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(20,20,20,.9);
+  cursor:pointer;
+  transition:.2s;
+}
+.appCard:hover{
+  transform:translateY(-2px);
+  border-color:var(--red);
+  box-shadow:var(--glow);
+}
+.appCard h3{
+  margin:0 0 6px;
+  font-size:18px;
+}
+.appCard p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+}
 
-  /* Mockup marca d'água tela toda */
-  body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:url("mockup.png") center/cover no-repeat;
-    opacity:0.09;
-    filter: saturate(1.05) contrast(1.03);
-    pointer-events:none;
-    z-index:-2;
-  }
+/* banner */
+.banner{
+  margin:16px 20px 0;
+  padding:16px;
+  border-radius:18px;
+  background:linear-gradient(90deg,#4d0000,#ff1e1e);
+  font-weight:800;
+}
 
-  /* Vinheta premium */
-  body::after{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:
-      radial-gradient(900px 500px at 50% 0%, rgba(0,0,0,.25), transparent 55%),
-      linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.12) 40%, rgba(0,0,0,.55));
-    pointer-events:none;
-    z-index:-1;
-  }
+/* sections */
+.section{
+  padding:20px;
+}
+.card{
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:20px;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:var(--shadow);
+  margin-bottom:18px;
+}
 
-  /* Topbar fixa */
-  .topbar{
-    position:fixed;
-    top:0; left:0; right:0;
-    height:var(--topbarH);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:14px;
-    padding:0 14px;
-    background:rgba(0,0,0,.72);
-    backdrop-filter: blur(12px);
-    border-bottom:1px solid rgba(255,255,255,.08);
-    z-index:999;
-  }
-  .topbar .logo{
-    height:58px;
-    width:auto;
-    border-radius:14px;
-    padding:8px 12px;
-    background:rgba(0,0,0,.35);
-    border:1px solid rgba(255,255,255,.10);
-    box-shadow: var(--shadow);
-  }
-  .topbar .rightTools{
-    position:absolute;
-    right:14px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  .topbar-spacer{height:var(--topbarH);}
+h2{color:var(--red);margin-top:0}
 
-  /* Layout */
-  .wrap{
-    max-width:1250px;
-    margin:0 auto;
-    padding:32px 20px 160px;
-    display:grid;
-    grid-template-columns: 1.25fr .85fr;
-    gap:24px;
-  }
-  @media (max-width: 980px){
-    .wrap{grid-template-columns:1fr}
-    .topbar .rightTools{position:static}
-    .topbar{justify-content:space-between}
-  }
+/* buttons */
+.btn{
+  border:none;
+  padding:14px;
+  border-radius:16px;
+  font-weight:900;
+  cursor:pointer;
+}
+.btn-primary{
+  background:linear-gradient(#ff2d2d,#b80000);
+  color:white;
+}
+.btn-wa{
+  background:linear-gradient(#2bff7e,#19c85e);
+  color:#062b14;
+}
 
-  .card{
-    background: linear-gradient(180deg, rgba(20,20,20,.92), rgba(12,12,12,.88));
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:var(--radius);
-    padding:26px;
-    box-shadow: var(--shadow);
-    position:relative;
-    overflow:hidden;
-  }
-  .card::before{
-    content:"";
-    position:absolute;
-    inset:-1px;
-    background:
-      radial-gradient(600px 300px at 0% 0%, rgba(255,30,30,.12), transparent 50%),
-      radial-gradient(600px 300px at 100% 20%, rgba(255,30,30,.08), transparent 55%);
-    pointer-events:none;
-    opacity:.9;
-  }
-  .card > *{position:relative; z-index:1}
+/* FINALIZAR FIXO */
+.finalBar{
+  position:fixed;
+  bottom:0; left:0; right:0;
+  padding:12px;
+  background:rgba(0,0,0,.85);
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.finalBar button{
+  width:100%;
+}
 
-  h2{
-    margin:0 0 10px;
-    font-size:17px;
-    color:var(--red);
-    letter-spacing:.2px;
-  }
-  .muted{color:var(--muted); font-size:13.5px; line-height:1.45}
-  .hr{height:1px; background:rgba(255,255,255,.08); margin:18px 0}
-
-  /* Chips */
-  .chips{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    justify-content:center;
-    margin:18px 0 0;
-    padding:0 14px;
-  }
-  .chip{
-    text-decoration:none;
-    padding:10px 14px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(255,255,255,.03);
-    color:#fff;
-    font-weight:1000;
-    font-size:13px;
-    transition: transform .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
-  }
-  .chip:hover{
-    transform: translateY(-1px);
-    background:rgba(255,30,30,.14);
-    border-color:rgba(255,30,30,.55);
-    box-shadow: var(--glow);
-  }
-
-  /* Section header */
-  .sectionTitle{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:12px;
-  }
-  .tag{
-    padding:7px 11px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(0,0,0,.25);
-    font-weight:1000;
-    font-size:12px;
-    white-space:nowrap;
-  }
-  .tag.red{
-    border-color: rgba(255,30,30,.55);
-    background: rgba(255,30,30,.12);
-    box-shadow: var(--glow);
-  }
-
-  /* Qty rows */
-  .qtyRow{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:14px;
-    padding:16px;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(255,255,255,.03);
-    transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
-  }
-  .qtyRow:hover{
-    transform: translateY(-1px);
-    border-color: rgba(255,30,30,.45);
-    background: rgba(255,30,30,.06);
-    box-shadow: var(--glow);
-  }
-  .qtyRow .left{display:flex; flex-direction:column; gap:6px}
-  .qtyRow .left .name{font-weight:1000; font-size:14px}
-  .qtyRow .left .desc{font-size:12.5px; color:var(--muted); line-height:1.25}
-  .qtyRow .right{display:flex; align-items:center; gap:10px}
-
-  .btnMini{
-    width:46px;
-    height:46px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.14);
-    background:rgba(0,0,0,.25);
-    color:#fff;
-    font-weight:1000;
-    font-size:18px;
-    cursor:pointer;
-    transition: transform .12s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
-    box-shadow: 0 10px 18px rgba(0,0,0,.25);
-  }
-  .btnMini:hover{
-    transform: translateY(-1px) scale(1.02);
-    border-color: rgba(255,30,30,.65);
-    background: rgba(255,30,30,.10);
-    box-shadow: var(--glowStrong);
-  }
-  .btnMini:active{ transform: scale(.98); }
-  .qtyNum{min-width:40px; text-align:center; font-weight:1000; font-size:16px}
-
-  /* Clickable items */
-  .checklist{display:grid; gap:14px; margin-top:12px}
-  .pick{
-    padding:18px;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(255,255,255,.03);
-    cursor:pointer;
-    transition: transform .16s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    user-select:none;
-  }
-  .pick:hover{
-    transform: translateY(-1px);
-    border-color: rgba(255,30,30,.55);
-    background: rgba(255,30,30,.06);
-    box-shadow: var(--glow);
-  }
-  .pick.active{
-    border-color: rgba(255,30,30,.92);
-    background: rgba(255,30,30,.12);
-    box-shadow: var(--glowStrong);
-  }
-  .pick .name{font-weight:1000; font-size:14px}
-  .pick .right{font-weight:1000; font-size:12px; color:rgba(255,255,255,.9)}
-
-  /* disabled lock */
-  .locked{
-    opacity:.55;
-    pointer-events:none;
-    filter: grayscale(.15);
-  }
-
-  /* meats rows */
-  .addRow{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:14px;
-    padding:16px;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(255,255,255,.03);
-    transition: transform .16s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
-  }
-  .addRow:hover{
-    transform: translateY(-1px);
-    border-color: rgba(255,30,30,.45);
-    background: rgba(255,30,30,.06);
-    box-shadow: var(--glow);
-  }
-  .addRow .info{display:flex; flex-direction:column; gap:6px}
-  .addRow .info .name{font-weight:1000}
-  .addRow .info .price{color:var(--muted); font-size:12.5px; font-weight:900}
-  .step{display:flex; align-items:center; gap:10px}
-
-  /* inputs */
-  .field{display:grid; gap:7px; margin:12px 0}
-  .field label{font-size:12.5px; color:#eaeaea; font-weight:1000}
-  .field input, .field textarea, .field select{
-    width:100%;
-    padding:12px 13px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.12);
-    background:rgba(0,0,0,.25);
-    color:#fff;
-    outline:none;
-    transition: border-color .18s ease, box-shadow .18s ease;
-  }
-  .field input:focus, .field textarea:focus, .field select:focus{
-    border-color: rgba(255,30,30,.55);
-    box-shadow: var(--glow);
-  }
-  .field textarea{min-height:96px; resize:vertical}
-
-  /* summary */
-  .summary{position:sticky; top:calc(var(--topbarH) + 16px); display:grid; gap:14px}
-  .totalBox{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    padding:14px;
-    border-radius:16px;
-    border:1px solid rgba(255,30,30,.35);
-    background:rgba(255,30,30,.10);
-    box-shadow: var(--glow);
-  }
-  .totalBox .t1{font-weight:1000}
-  .totalBox .t2{font-weight:1000; font-size:22px}
-
-  .lineItem{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    padding:11px 0;
-    border-bottom:1px solid rgba(255,255,255,.06);
-    font-size:13.5px;
-  }
-  .lineItem:last-child{border-bottom:none}
-  .lineItem .l{color:#eaeaea; font-weight:900}
-  .lineItem .r{color:#fff; font-weight:1000}
-
-  .miniBox{
-    padding:14px;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(0,0,0,.22);
-  }
-  .miniBox h4{
-    margin:0 0 10px;
-    font-size:13.5px;
-    color:#fff;
-    letter-spacing:.2px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-  }
-  .boxText{
-    width:100%;
-    min-height:120px;
-    padding:14px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.12);
-    background:rgba(0,0,0,.25);
-    color:#fff;
-    outline:none;
-    resize:vertical;
-    font-size:13.5px;
-    line-height:1.4;
-  }
-
-  /* CTA */
-  .btn{
-    width:100%;
-    border:none;
-    padding:15px 16px;
-    border-radius:16px;
-    font-weight:1000;
-    cursor:pointer;
-    transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
-  }
-  .btn:active{transform:scale(.99)}
-  .btn-wa{
-    background: linear-gradient(180deg, #2bff7e, #19c85e);
-    color:#062b14;
-    box-shadow: 0 18px 40px rgba(37,211,102,.18);
-  }
-  .btn-wa:hover{filter:brightness(1.04)}
-  .btn-ghost{
-    background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.14);
-    color:#fff;
-  }
-  .btn-ghost:hover{filter:brightness(1.04)}
-
-  .warn{
-    padding:12px 14px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(0,0,0,.22);
-    color:#eaeaea;
-    font-size:12.5px;
-    line-height:1.35;
-  }
-
-  /* tools */
-  .toolBtn{
-    border:1px solid rgba(255,255,255,.12);
-    background:rgba(255,255,255,.05);
-    color:#fff;
-    border-radius:14px;
-    padding:10px 12px;
-    font-weight:1000;
-    font-size:12.5px;
-    cursor:pointer;
-    transition:.18s ease;
-    white-space:nowrap;
-  }
-  .toolBtn:hover{
-    border-color: rgba(255,30,30,.55);
-    background: rgba(255,30,30,.10);
-    box-shadow: var(--glow);
-    transform: translateY(-1px);
-  }
-
-  /* Admin drawer */
-  .drawerOverlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    backdrop-filter: blur(6px);
-    z-index:2000;
-    display:none;
-  }
-  .drawer{
-    position:fixed;
-    top:0;
-    right:0;
-    width:min(560px, 92vw);
-    height:100vh;
-    background:linear-gradient(180deg, rgba(18,18,18,.98), rgba(10,10,10,.98));
-    border-left:1px solid rgba(255,255,255,.10);
-    box-shadow: -20px 0 60px rgba(0,0,0,.55);
-    z-index:2001;
-    transform: translateX(110%);
-    transition: transform .25s ease;
-    padding:18px;
-    overflow:auto;
-  }
-  .drawer.open{ transform: translateX(0); }
-  .drawerOverlay.open{ display:block; }
-  .drawer h3{margin:0 0 10px; color:var(--red); letter-spacing:.2px;}
-  .drawer .small{color:var(--muted); font-size:12.5px; line-height:1.4; margin-bottom:14px}
-  .drawer .row2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-  @media (max-width:560px){ .drawer .row2{grid-template-columns:1fr} }
-
-  /* Splash */
-  .splash{
-    position:fixed;
-    inset:0;
-    background: radial-gradient(900px 500px at 20% 10%, rgba(255,30,30,.18), transparent 55%),
-                linear-gradient(180deg, rgba(0,0,0,.92), rgba(0,0,0,.86));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:3000;
-    transition: opacity .35s ease;
-  }
-  .splash.hide{opacity:0; pointer-events:none;}
-  .splashBox{
-    width:min(520px, 92vw);
-    background:rgba(12,12,12,.72);
-    border:1px solid rgba(255,255,255,.10);
-    border-radius:20px;
-    padding:22px;
-    box-shadow: var(--shadow);
-    text-align:center;
-  }
-  .splashLogo{
-    height:60px;
-    width:auto;
-    padding:10px 14px;
-    border-radius:16px;
-    background:rgba(0,0,0,.35);
-    border:1px solid rgba(255,255,255,.10);
-    box-shadow: var(--glow);
-  }
-  .loader{
-    margin:16px auto 8px;
-    width:56px; height:56px;
-    border-radius:50%;
-    border:4px solid rgba(255,255,255,.12);
-    border-top-color: rgba(255,30,30,.85);
-    animation: spin 1s linear infinite;
-  }
-  @keyframes spin{ to{ transform: rotate(360deg);} }
-  .splashText{color:#eaeaea; font-weight:1000; margin-top:6px}
-  .splashSub{color:var(--muted); font-size:12.5px; margin-top:6px; line-height:1.35}
-
-  /* Toast */
-  #toast{
-    position:fixed;
-    left:50%;
-    bottom:18px;
-    transform:translateX(-50%);
-    background:rgba(0,0,0,.85);
-    border:1px solid rgba(255,255,255,.12);
-    color:#fff;
-    padding:12px 14px;
-    border-radius:16px;
-    font-weight:1000;
-    box-shadow: 0 20px 50px rgba(0,0,0,.45);
-    z-index:4000;
-    max-width:92vw;
-    opacity:0;
-    transition: opacity .18s ease;
-    pointer-events:none;
-  }
-
-  /* Coupon row */
-  .couponRow{
-    display:flex;
-    gap:10px;
-    align-items:center;
-  }
-  .couponRow input{flex:1}
-  .smallBtn{
-    padding:12px 14px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.14);
-    background:rgba(255,255,255,.06);
-    color:#fff;
-    font-weight:1000;
-    cursor:pointer;
-    transition:.18s ease;
-    white-space:nowrap;
-  }
-  .smallBtn:hover{
-    border-color: rgba(255,30,30,.55);
-    background: rgba(255,30,30,.10);
-    box-shadow: var(--glow);
-    transform: translateY(-1px);
-  }
-
-  /* Confirm montado */
-  .confirmBox{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    align-items:center;
-    justify-content:space-between;
-  }
-
+/* pix box */
+.pixBox{
+  display:flex;
+  gap:10px;
+}
+.pixBox input{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  background:#111;
+  color:white;
+}
+.smallBtn{
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  background:#333;
+  color:white;
+  cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<div class="splash" id="splash">
-  <div class="splashBox">
-    <img class="splashLogo" src="LOGO.PNG" alt="Logo">
-    <div class="loader"></div>
-    <div class="splashText" id="splashTitle">Carregando cardápio…</div>
-    <div class="splashSub">Pedido rápido pelo WhatsApp.</div>
-  </div>
-</div>
-
+<!-- TOP -->
 <div class="topbar">
-  <img class="logo" src="LOGO.PNG" alt="Logo">
-  <div class="rightTools">
-    <button class="toolBtn" id="installBtn" style="display:none;">Instalar</button>
-    <select id="restSelect" class="toolBtn"></select>
-    <button class="toolBtn" onclick="openAdmin()">Admin</button>
-  </div>
-</div>
-<div class="topbar-spacer"></div>
-
-<div class="chips">
-  <a class="chip" href="#marmitas">Marmitas</a>
-  <a class="chip" href="#montado">Itens do Montado</a>
-  <a class="chip" href="#extras">Adicionais & Bebidas</a>
-  <a class="chip" href="#dados">Entrega & Pagamento</a>
+  <img src="LOGO.PNG" class="logo">
+  <div class="brandName">restaurante lp-grill</div>
 </div>
 
-<div class="wrap">
+<div id="status" class="statusBar"></div>
 
-  <div>
-    <div class="card" id="marmitas">
-      <h2>🍱 Marmitas (quantidade)</h2>
-      <div class="muted" id="brandLine"></div>
-
-      <div class="hr"></div>
-
-      <div class="sectionTitle">
-        <div>
-          <div style="font-weight:1000; font-size:14px;">🍛 Marmitex do Dia — <span id="pBase1"></span></div>
-          <div class="muted" id="diaDesc" style="margin-top:6px;"></div>
-        </div>
-        <div class="tag">fixo</div>
-      </div>
-      <div class="qtyRow" style="margin-top:12px;">
-        <div class="left">
-          <div class="name">Quantidade</div>
-          <div class="desc">Marmitex do Dia (pronto)</div>
-        </div>
-        <div class="right">
-          <button class="btnMini" onclick="qtyChange('dia', -1)">−</button>
-          <div class="qtyNum" id="q_dia">0</div>
-          <button class="btnMini" onclick="qtyChange('dia', 1)">+</button>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="sectionTitle">
-        <div>
-          <div style="font-weight:1000; font-size:14px;">🥘 Marmitex Clássico — <span id="pBase2"></span></div>
-          <div class="muted" id="classicoDesc" style="margin-top:6px;"></div>
-        </div>
-        <div class="tag">fixo</div>
-      </div>
-      <div class="qtyRow" style="margin-top:12px;">
-        <div class="left">
-          <div class="name">Quantidade</div>
-          <div class="desc">Marmitex Clássico (pronto)</div>
-        </div>
-        <div class="right">
-          <button class="btnMini" onclick="qtyChange('classico', -1)">−</button>
-          <div class="qtyNum" id="q_classico">0</div>
-          <button class="btnMini" onclick="qtyChange('classico', 1)">+</button>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="sectionTitle">
-        <div>
-          <div style="font-weight:1000; font-size:14px;">🧩 Montado — <span id="pMont"></span></div>
-          <div class="muted" style="margin-top:6px;">Selecione até <b>8 itens</b>. Confirme para travar.</div>
-        </div>
-        <div class="tag red" id="limitTag">0/8</div>
-      </div>
-
-      <div class="qtyRow" style="margin-top:12px;">
-        <div class="left">
-          <div class="name">Quantidade</div>
-          <div class="desc">Marmitex Montado (personalizado)</div>
-        </div>
-        <div class="right">
-          <button class="btnMini" onclick="qtyChange('montado', -1)">−</button>
-          <div class="qtyNum" id="q_montado">0</div>
-          <button class="btnMini" onclick="qtyChange('montado', 1)">+</button>
-        </div>
-      </div>
-
-      <div class="warn" style="margin-top:14px;">
-        Para selecionar itens, a quantidade de <b>Montado</b> precisa ser maior que 0.
-      </div>
-    </div>
-
-    <div style="height:18px;"></div>
-
-    <div class="card" id="montado">
-      <h2>✅ Itens do Montado</h2>
-      <div class="muted">Clique para adicionar/remover. Depois clique em <b>Confirmar Montado</b> para travar.</div>
-
-      <div class="hr"></div>
-
-      <div class="confirmBox">
-        <div class="muted">Status: <b id="montadoStatus">Aberto (editável)</b></div>
-        <button class="toolBtn" id="confirmBtn" onclick="toggleConfirmMontado()">Confirmar Montado</button>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="sectionTitle">
-        <div style="font-weight:1000">🍛 Itens do Dia</div>
-        <div class="tag">clicável</div>
-      </div>
-      <div class="checklist" id="list-dia"></div>
-
-      <div class="hr"></div>
-
-      <div class="sectionTitle">
-        <div style="font-weight:1000">🥘 Itens do Clássico</div>
-        <div class="tag">clicável</div>
-      </div>
-      <div class="checklist" id="list-classico"></div>
-
-      <div class="field" style="margin-top:18px;">
-        <label>📝 Observação do Montado (opcional)</label>
-        <textarea id="txtMontadoObs" placeholder="Ex: sem macarrão, pouco feijão, mais salada…"></textarea>
-      </div>
-    </div>
-
-    <div style="height:18px;"></div>
-
-    <div class="card" id="extras">
-      <h2>🥩 Adicionais • 🥤 Bebidas • 🍴 Talheres</h2>
-      <div class="muted">Adicionais: + <b id="pAdd"></b> cada.</div>
-
-      <div class="hr"></div>
-      <div class="checklist" id="list-carnes"></div>
-
-      <div class="hr"></div>
-
-      <div class="field">
-        <label>Bebidas</label>
-        <select id="selBebida"></select>
-      </div>
-
-      <div class="field">
-        <label>Talheres</label>
-        <select id="selTalher">
-          <option value="0">Não precisa</option>
-          <option value="1">Sim, enviar talher</option>
-        </select>
-      </div>
-    </div>
-
-    <div style="height:18px;"></div>
-
-    <div class="card" id="dados">
-      <h2>🚚 Entrega • 💳 Pagamento • 🎟 Cupom</h2>
-
-      <div class="hr"></div>
-
-      <div class="field">
-        <label>Entrega / Retirada</label>
-        <select id="selEntrega"></select>
-      </div>
-
-      <div class="field">
-        <label>Forma de pagamento</label>
-        <select id="selPagamento">
-          <option value="PIX">PIX</option>
-          <option value="Dinheiro">Dinheiro</option>
-          <option value="Cartão">Cartão</option>
-        </select>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="field">
-        <label>🎟 Cupom</label>
-        <div class="couponRow">
-          <input id="inpCupom" placeholder="Ex: LP10 ou FRETEGRATIS" />
-          <button class="smallBtn" onclick="aplicarCupom()">Aplicar</button>
-        </div>
-        <div class="muted" id="cupomInfo" style="margin-top:8px;">Nenhum cupom aplicado.</div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="field">
-        <label>Seu nome</label>
-        <input id="inpNome" placeholder="Ex: João Silva" />
-      </div>
-
-      <div class="field">
-        <label>Número de telefone (obrigatório)</label>
-        <input id="inpFone" placeholder="Ex: (31) 9xxxx-xxxx" />
-      </div>
-
-      <div class="field">
-        <label>Endereço completo (obrigatório)</label>
-        <input id="inpEndereco" placeholder="Rua, número, bairro, cidade" />
-      </div>
-
-      <div class="field">
-        <label>Ponto de referência (obrigatório)</label>
-        <input id="inpRef" placeholder="Ex: perto da padaria / portão azul" />
-      </div>
-
-      <div class="field">
-        <label>📝 Observação do pedido (geral)</label>
-        <textarea id="txtPedidoObs" placeholder="Ex: mandar talher, chamar no portão…"></textarea>
-      </div>
-
-      <div class="warn">
-        ✅ Confirme tudo antes de enviar. O pedido vai direto para o WhatsApp.
-      </div>
-    </div>
-  </div>
-
-  <div class="summary">
-    <div class="card">
-      <h2>💰 Total & Resumo</h2>
-
-      <div class="totalBox">
-        <div>
-          <div class="t1">Total</div>
-          <div class="muted">base + adicionais + bebida + entrega − desconto</div>
-        </div>
-        <div class="t2" id="total">R$ 0,00</div>
-      </div>
-
-      <div class="hr"></div>
-      <div id="lineItems"></div>
-
-      <div class="hr"></div>
-
-      <div class="miniBox">
-        <h4>🧾 Itens do Montado <span class="tag red" id="miniLimit">0/8</span></h4>
-        <textarea class="boxText" id="boxCardapio" readonly placeholder="Itens selecionados aparecem aqui…"></textarea>
-      </div>
-
-      <div class="hr"></div>
-
-      <button class="btn btn-wa" onclick="enviarWhats()">Enviar pedido no WhatsApp</button>
-      <div style="height:10px"></div>
-      <button class="btn btn-ghost" onclick="limparTudo()">Limpar tudo</button>
-
-      <div class="hr"></div>
-      <div class="muted" id="pixLine"></div>
-    </div>
-  </div>
-
+<div class="banner">
+🔥 Promo do dia: Frango assado + batata frita
 </div>
 
-<div id="toast"></div>
-
-<!-- ADMIN -->
-<div class="drawerOverlay" id="drawerOverlay" onclick="closeAdmin()"></div>
-<div class="drawer" id="drawer" onclick="event.stopPropagation()">
-  <h3>Admin — editar tudo</h3>
-  <div class="small">
-    🔒 Senha padrão: <b>1234</b> (pode trocar no código: <code>ADMIN_PASS</code>)<br>
-    ✅ Salva no navegador (localStorage).<br>
-    ✅ Troca: nome, Whats, PIX, preços, cardápios, carnes, bebidas e cupons.
+<!-- HOME -->
+<div class="home" id="home">
+  <div class="appCard" onclick="scrollToSection('dia')">
+    <h3>🍛 Prato do Dia</h3>
+    <p>Clássico pronto — rápido</p>
   </div>
 
-  <div class="field">
-    <label>Senha</label>
-    <input id="adminPass" type="password" placeholder="Digite 1234" />
+  <div class="appCard" onclick="scrollToSection('classico')">
+    <h3>🥘 Clássico</h3>
+    <p>Frango com quiabo + acompanhamentos</p>
   </div>
 
-  <div id="adminFields" style="display:none;">
-    <div class="row2">
-      <div class="field"><label>Nome do restaurante</label><input id="admName"/></div>
-      <div class="field"><label>WhatsApp (somente números)</label><input id="admWa"/></div>
-    </div>
-
-    <div class="row2">
-      <div class="field"><label>Preço base (Dia/Clássico)</label><input id="admPBase" type="number"/></div>
-      <div class="field"><label>Preço Montado</label><input id="admPMont" type="number"/></div>
-    </div>
-
-    <div class="row2">
-      <div class="field"><label>Preço adicional carne</label><input id="admPAdd" type="number"/></div>
-      <div class="field"><label>Taxa entrega</label><input id="admEnt" type="number"/></div>
-    </div>
-
-    <div class="row2">
-      <div class="field"><label>Prazo médio (texto)</label><input id="admPrazo"/></div>
-      <div class="field"><label>PIX (chave)</label><input id="admPix"/></div>
-    </div>
-
-    <div class="field"><label>Descrição do Dia</label><textarea id="admDiaDesc"></textarea></div>
-    <div class="field"><label>Descrição do Clássico</label><textarea id="admClasDesc"></textarea></div>
-
-    <div class="row2">
-      <div class="field"><label>Itens do Dia (1 por linha)</label><textarea id="admDiaItems"></textarea></div>
-      <div class="field"><label>Itens do Clássico (1 por linha)</label><textarea id="admClasItems"></textarea></div>
-    </div>
-
-    <div class="row2">
-      <div class="field"><label>Carnes (1 por linha)</label><textarea id="admCarnes"></textarea></div>
-      <div class="field"><label>Bebidas (Nome|preço) 1 por linha</label><textarea id="admBebidas"></textarea></div>
-    </div>
-
-    <div class="field">
-      <label>Cupons (1 por linha)</label>
-      <textarea id="admCupons" placeholder="Ex:
-LP10|PERCENT|10
-5OFF|FIX|5
-FRETEGRATIS|FRETE|0"></textarea>
-      <div class="muted">Formato: <b>CÓDIGO|TIPO|VALOR</b> (TIPO: PERCENT / FIX / FRETE)</div>
-    </div>
-
-    <button class="toolBtn" style="width:100%; padding:14px; border-radius:16px;" onclick="saveAdmin()">Salvar</button>
-    <div style="height:10px"></div>
-    <button class="toolBtn" style="width:100%; padding:14px; border-radius:16px;" onclick="resetAdmin()">Resetar padrão</button>
+  <div class="appCard" onclick="scrollToSection('montado')">
+    <h3>🧩 Montar Meu Prato</h3>
+    <p>Escolha até 8 itens</p>
   </div>
+</div>
+
+<!-- PIX -->
+<div class="section">
+  <div class="card">
+    <h2>💠 PIX</h2>
+    <div class="pixBox">
+      <input id="pix" value="31998064556" readonly>
+      <button class="smallBtn" onclick="copyPix()">Copiar</button>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div class="finalBar">
+  <button class="btn btn-wa" onclick="sendOrder()">Finalizar Pedido</button>
 </div>
 
 <script>
-/* ========= CONFIG DEFAULT ========= */
-const RESTAURANTS_DEFAULT = [{
-  id:"lpgrill",
-  name:"LP Grill",
-  whatsapp:"5531998064556",
-  pix:"(adicione sua chave PIX no Admin)",
-  prazo:"30 minutos",
-  precoBase:18,
-  precoMontado:21,
-  precoAdd:4,
-  entrega:5,
-  diaDesc:"Arroz, feijão, macarrão, batata frita, frango assado, salada (alface e tomate).",
-  classicoDesc:"Arroz, feijão, frango com quiabo, angu, couve, salada (tomate).",
-  itensDia:["Arroz","Feijão","Macarrão","Batata frita","Frango assado","Salada (alface e tomate)"],
-  itensClassico:["Arroz","Feijão","Frango com quiabo","Angu","Couve","Salada (tomate)"],
-  carnes:["Bife de boi","Bife de porco","Omelete"],
-  bebidas:[
-    {name:"Nenhum", price:0},
-    {name:"Coca-Cola 1L", price:10},
-    {name:"Fanta 1L", price:10},
-    {name:"Coca-Cola 2L", price:18}
-  ],
-  cupons:[
-    {code:"LP10", type:"PERCENT", value:10},
-    {code:"5OFF", type:"FIX", value:5},
-    {code:"FRETEGRATIS", type:"FRETE", value:0}
-  ]
-}];
 
-/* ========= STORAGE ========= */
-const STORE_KEY = "menu_site_config_v2";
-function loadStore(){ try{ const r=localStorage.getItem(STORE_KEY); return r?JSON.parse(r):null; }catch(e){ return null; } }
-function saveStore(data){ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }
+/* ===== STATUS OPEN/CLOSED ===== */
+const OPEN=11;
+const CLOSE=15;
 
-/* ========= STATE ========= */
-let restaurants = loadStore()?.restaurants || RESTAURANTS_DEFAULT;
-let currentId = loadStore()?.currentId || restaurants[0].id;
-let cfg = restaurants.find(r => r.id === currentId) || restaurants[0];
-
-const LIMITE_ITENS = 8;
-const qty = { dia:0, classico:0, montado:0 };
-let selected = [];
-let addMeatQty = {};
-let montadoConfirmado = false;
-
-let cupomApplied = null; // {code,type,value}
-let discountValue = 0;
-let freteOverride = null; // null ou 0
-
-/* ========= HELPERS ========= */
-function moeda(v){ return "R$ " + Number(v).toFixed(2).replace(".", ","); }
-function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
-function cssSafe(s){ return String(s).replace(/[^a-zA-Z0-9\-_:.]/g, "_"); }
-function escHtml(str){
-  return String(str).replace(/[&<>"']/g, (m) => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[m]));
-}
-function toast(text){
-  const el = document.getElementById("toast");
-  el.textContent = text;
-  el.style.opacity = "1";
-  clearTimeout(window.__t);
-  window.__t = setTimeout(()=> el.style.opacity="0", 2200);
-}
-
-/* ========= REST SELECT ========= */
-function renderRestSelect(){
-  const sel = document.getElementById("restSelect");
-  sel.innerHTML = "";
-  restaurants.forEach(r=>{
-    const opt = document.createElement("option");
-    opt.value = r.id;
-    opt.textContent = r.name;
-    if(r.id === cfg.id) opt.selected = true;
-    sel.appendChild(opt);
-  });
-  sel.onchange = ()=> switchRestaurant(sel.value);
-}
-function switchRestaurant(id){
-  currentId = id;
-  cfg = restaurants.find(r => r.id === id) || restaurants[0];
-  limparTudo(false);
-  applyCfgToUI();
-  saveStore({restaurants, currentId});
-}
-
-/* ========= BUILD LISTS ========= */
-function renderPickList(containerId, items, group){
-  const el = document.getElementById(containerId);
-  el.innerHTML = "";
-  items.forEach(name=>{
-    const key = `${group}:${name}`;
-    el.innerHTML += `
-      <div class="pick" id="${cssSafe(key)}" onclick="togglePick('${key.replace(/'/g,"\\'")}')">
-        <div class="name">${escHtml(name)}</div>
-        <div class="right">+</div>
-      </div>
-    `;
-  });
-}
-function renderMeats(){
-  const el = document.getElementById("list-carnes");
-  el.innerHTML = "";
-  addMeatQty = {};
-  (cfg.carnes||[]).forEach(name=>{
-    addMeatQty[name]=0;
-    el.innerHTML += `
-      <div class="addRow">
-        <div class="info">
-          <div class="name">${escHtml(name)}</div>
-          <div class="price">+ ${moeda(cfg.precoAdd)} cada</div>
-        </div>
-        <div class="step">
-          <button class="btnMini" onclick="meatChange('${name.replace(/'/g,"\\'")}', -1)">−</button>
-          <div class="qtyNum" id="m_${cssSafe(name)}">0</div>
-          <button class="btnMini" onclick="meatChange('${name.replace(/'/g,"\\'")}', 1)">+</button>
-        </div>
-      </div>
-    `;
-  });
-}
-function renderBebidas(){
-  const sel = document.getElementById("selBebida");
-  sel.innerHTML = "";
-  (cfg.bebidas||[]).forEach(b=>{
-    const opt = document.createElement("option");
-    opt.value = b.price;
-    opt.textContent = `${b.name}${b.price>0 ? " — " + moeda(b.price) : ""}`;
-    sel.appendChild(opt);
-  });
-}
-function applyCfgToUI(){
-  document.title = `${cfg.name} — Cardápio & Pedido`;
-  document.getElementById("splashTitle").textContent = `Carregando ${cfg.name}…`;
-
-  document.getElementById("diaDesc").textContent = cfg.diaDesc || "";
-  document.getElementById("classicoDesc").textContent = cfg.classicoDesc || "";
-
-  document.getElementById("pBase1").textContent = moeda(cfg.precoBase);
-  document.getElementById("pBase2").textContent = moeda(cfg.precoBase);
-  document.getElementById("pMont").textContent = moeda(cfg.precoMontado);
-  document.getElementById("pAdd").textContent = moeda(cfg.precoAdd);
-
-  document.getElementById("brandLine").innerHTML =
-    `Marmitex pronto: <b>${moeda(cfg.precoBase)}</b> • Montado: <b>${moeda(cfg.precoMontado)}</b> • Adicional: <b>+ ${moeda(cfg.precoAdd)}</b> • Entrega: <b>${moeda(cfg.entrega)}</b> • Prazo: <b>${cfg.prazo}</b>`;
-
-  document.getElementById("pixLine").innerHTML = cfg.pix ? `💠 PIX: <b>${escHtml(cfg.pix)}</b>` : "";
-
-  renderPickList("list-dia", cfg.itensDia||[], "dia");
-  renderPickList("list-classico", cfg.itensClassico||[], "classico");
-  renderMeats();
-  renderBebidas();
-
-  const selEntrega = document.getElementById("selEntrega");
-  selEntrega.innerHTML = `
-    <option value="0">Retirada no local — GRÁTIS</option>
-    <option value="${cfg.entrega}">Entrega — taxa ${moeda(cfg.entrega)}</option>
-  `;
-
-  // reset cupom
-  cupomApplied = null;
-  discountValue = 0;
-  freteOverride = null;
-  document.getElementById("inpCupom").value="";
-  document.getElementById("cupomInfo").textContent="Nenhum cupom aplicado.";
-
-  refreshPicksUI();
-  calc();
-}
-
-/* ========= QTY ========= */
-function qtyChange(type, delta){
-  qty[type] = clamp(qty[type] + delta, 0, 20);
-  document.getElementById("q_"+type).textContent = qty[type];
-
-  if(type==="montado" && qty.montado===0){
-    selected=[];
-    document.getElementById("txtMontadoObs").value="";
-    montadoConfirmado=false;
-    setMontadoState();
-    refreshPicksUI();
-  }
-  calc();
-}
-
-/* ========= CONFIRM MONTADO ========= */
-function setMontadoState(){
-  const status = document.getElementById("montadoStatus");
-  const btn = document.getElementById("confirmBtn");
-  const lists = [document.getElementById("list-dia"), document.getElementById("list-classico")];
-
-  if(montadoConfirmado){
-    status.textContent = "Confirmado (travado)";
-    btn.textContent = "Editar Montado";
-    lists.forEach(l=> l.classList.add("locked"));
+function updateStatus(){
+  const h=new Date().getHours();
+  const el=document.getElementById("status");
+  if(h>=OPEN && h<CLOSE){
+    el.className="statusBar status-open";
+    el.innerHTML="🟢 ABERTO — até 15:00";
   }else{
-    status.textContent = "Aberto (editável)";
-    btn.textContent = "Confirmar Montado";
-    lists.forEach(l=> l.classList.remove("locked"));
+    el.className="statusBar status-closed";
+    el.innerHTML="🔴 FECHADO — abre às 11:00 (aceitando agendamento)";
   }
 }
-function toggleConfirmMontado(){
-  if(qty.montado===0){
-    toast("Aumente a quantidade de Montado (+) primeiro.");
-    return;
-  }
-  if(!montadoConfirmado && selected.length===0){
-    toast("Selecione ao menos 1 item para confirmar.");
-    return;
-  }
-  montadoConfirmado = !montadoConfirmado;
-  setMontadoState();
-  toast(montadoConfirmado ? "Montado confirmado ✅" : "Montado liberado para edição ✍️");
+updateStatus();
+
+/* ===== SCROLL ===== */
+function scrollToSection(id){
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
 }
 
-/* ========= PICK ========= */
-function togglePick(key){
-  if(qty.montado===0){
-    toast("Aumente a quantidade de Montado (+) para escolher itens.");
-    return;
-  }
-  if(montadoConfirmado){
-    toast("Montado está confirmado. Clique em “Editar Montado” para alterar.");
-    return;
-  }
-
-  const idx = selected.indexOf(key);
-  if(idx>=0){
-    selected.splice(idx,1);
-    refreshPicksUI();
-    calc();
-    return;
-  }
-  if(selected.length>=LIMITE_ITENS){
-    toast("Limite de 8 itens atingido.");
-    return;
-  }
-  selected.push(key);
-  refreshPicksUI();
-  calc();
+/* ===== PIX ===== */
+function copyPix(){
+  navigator.clipboard.writeText("31998064556");
+  alert("PIX copiado!");
 }
 
-function refreshPicksUI(){
-  const all = [
-    ...(cfg.itensDia||[]).map(x=>`dia:${x}`),
-    ...(cfg.itensClassico||[]).map(x=>`classico:${x}`)
-  ];
-  all.forEach(k=>{
-    const el = document.getElementById(cssSafe(k));
-    if(!el) return;
-    const active = selected.includes(k);
-    el.classList.toggle("active", active);
-    const r = el.querySelector(".right");
-    if(r) r.textContent = active ? "✓" : "+";
-  });
+/* ===== WHATS ===== */
+function sendOrder(){
+  const msg = `
+🍽️ *PEDIDO — RESTAURANTE LP-GRILL*
 
-  const names = selected.map(k=>k.split(":")[1]);
-  document.getElementById("boxCardapio").value = names.length ? names.join(", ") : "";
+Obrigado por escolher a gente! ❤️
 
-  document.getElementById("limitTag").textContent = `${selected.length}/${LIMITE_ITENS}`;
-  document.getElementById("miniLimit").textContent = `${selected.length}/${LIMITE_ITENS}`;
+Confirme seu pedido respondendo esta mensagem.
+
+⏱ Funcionamento: 11h às 15h
+📍 Janaúba MG (em breve loja física)
+
+💠 PIX: 31998064556
+`;
+
+  window.open(
+    "https://wa.me/5531998064556?text="+encodeURIComponent(msg),
+    "_blank"
+  );
 }
 
-/* ========= MEATS ========= */
-function meatChange(name, delta){
-  addMeatQty[name] = clamp((addMeatQty[name]||0)+delta, 0, 20);
-  const el = document.getElementById("m_"+cssSafe(name));
-  if(el) el.textContent = addMeatQty[name];
-  calc();
-}
-
-/* ========= CUPOM ========= */
-function aplicarCupom(){
-  const code = document.getElementById("inpCupom").value.trim().toUpperCase();
-  if(!code){
-    toast("Digite um cupom.");
-    return;
-  }
-  const cup = (cfg.cupons||[]).find(c=>String(c.code).toUpperCase()===code);
-  if(!cup){
-    toast("Cupom inválido.");
-    return;
-  }
-  cupomApplied = cup;
-  document.getElementById("cupomInfo").textContent = `Cupom aplicado: ${cup.code} (${cup.type})`;
-  toast("Cupom aplicado ✅");
-  calc();
-}
-
-/* ========= CALC ========= */
-function calc(){
-  // frete
-  const entregaSel = Number(document.getElementById("selEntrega").value || 0);
-  let entregaVal = entregaSel;
-
-  // bebida
-  const bebidaVal = Number(document.getElementById("selBebida").value || 0);
-
-  // base
-  const subtotalDia = qty.dia * Number(cfg.precoBase);
-  const subtotalClassico = qty.classico * Number(cfg.precoBase);
-  const subtotalMontado = qty.montado * Number(cfg.precoMontado);
-
-  // meats
-  let meatsQty=0, meatsTotal=0;
-  Object.keys(addMeatQty).forEach(k=>{
-    meatsQty += addMeatQty[k];
-    meatsTotal += addMeatQty[k] * Number(cfg.precoAdd);
-  });
-
-  // talher (apenas informativo, sem custo)
-  const talher = Number(document.getElementById("selTalher").value || 0);
-
-  // desconto
-  discountValue = 0;
-  if(cupomApplied){
-    if(cupomApplied.type === "FRETE"){
-      entregaVal = 0; // frete grátis
-    }else{
-      const baseForDiscount = subtotalDia + subtotalClassico + subtotalMontado + meatsTotal + bebidaVal; // sem frete
-      if(cupomApplied.type === "PERCENT"){
-        discountValue = baseForDiscount * (Number(cupomApplied.value)/100);
-      }else if(cupomApplied.type === "FIX"){
-        discountValue = Number(cupomApplied.value);
-      }
-      // não deixar desconto passar do valor base
-      discountValue = Math.max(0, Math.min(discountValue, baseForDiscount));
-    }
-  }
-
-  const total = (subtotalDia + subtotalClassico + subtotalMontado + meatsTotal + bebidaVal + entregaVal) - discountValue;
-  document.getElementById("total").textContent = moeda(Math.max(0,total));
-
-  // linhas
-  const liBox = document.getElementById("lineItems");
-  liBox.innerHTML = "";
-  const addLine = (label, value) => {
-    const div = document.createElement("div");
-    div.className="lineItem";
-    div.innerHTML = `<div class="l">${label}</div><div class="r">${value}</div>`;
-    liBox.appendChild(div);
-  };
-
-  if(qty.dia>0) addLine(`🍛 Marmitex do Dia x${qty.dia}`, moeda(subtotalDia));
-  if(qty.classico>0) addLine(`🥘 Marmitex Clássico x${qty.classico}`, moeda(subtotalClassico));
-  if(qty.montado>0) addLine(`🧩 Montado x${qty.montado}`, moeda(subtotalMontado));
-
-  if(qty.montado>0) addLine(`✅ Itens do Montado (${selected.length}/${LIMITE_ITENS})`, montadoConfirmado ? "CONFIRMADO" : "ABERTO");
-  if(meatsQty>0) addLine(`🥩 Adicionais (x${meatsQty})`, moeda(meatsTotal));
-  if(bebidaVal>0) addLine(`🥤 Bebida`, moeda(bebidaVal));
-  if(entregaVal>0) addLine(`🚚 Entrega`, moeda(entregaVal));
-  if(entregaVal===0 && entregaSel>0) addLine(`🚚 Entrega`, `GRÁTIS`);
-  if(talher===1) addLine(`🍴 Talher`, `SIM`);
-  if(discountValue>0) addLine(`🎟 Desconto (${cupomApplied.code})`, `- ${moeda(discountValue)}`);
-
-  if((qty.dia+qty.classico+qty.montado)===0) addLine(`Nenhum item selecionado`, `—`);
-
-  refreshPicksUI();
-}
-
-/* ========= WHATS ========= */
-function enviarWhats(){
-  const nome = document.getElementById("inpNome").value.trim();
-  const fone = document.getElementById("inpFone").value.trim();
-  const endereco = document.getElementById("inpEndereco").value.trim();
-  const ref = document.getElementById("inpRef").value.trim();
-  const pagamento = document.getElementById("selPagamento").value;
-  const entregaSel = Number(document.getElementById("selEntrega").value || 0);
-  const entregaTxt = (entregaSel>0) ? "Entrega" : "Retirada (grátis)";
-  const talher = Number(document.getElementById("selTalher").value||0) ? "SIM" : "NÃO";
-  const pedidoObs = document.getElementById("txtPedidoObs").value.trim();
-  const montObs = document.getElementById("txtMontadoObs").value.trim();
-  const totalTxt = document.getElementById("total").textContent;
-
-  if(!fone || !endereco || !ref){
-    toast("Preencha: telefone, endereço e referência.");
-    return;
-  }
-  if((qty.dia+qty.classico+qty.montado)===0){
-    toast("Selecione ao menos 1 marmita.");
-    return;
-  }
-  if(qty.montado>0 && !montadoConfirmado){
-    toast("Confirme o Montado antes de enviar (evita erro).");
-    return;
-  }
-
-  let msg = "";
-  msg += `🧾 *PEDIDO - ${cfg.name.toUpperCase()}*%0A`;
-  if(nome) msg += `👤 Nome: ${encodeURIComponent(nome)}%0A`;
-  msg += `📞 Telefone: ${encodeURIComponent(fone)}%0A%0A`;
-
-  msg += `*🍱 Marmitas*%0A`;
-  if(qty.dia>0) msg += `• Dia x${qty.dia} — ${moeda(cfg.precoBase)}%0A`;
-  if(qty.classico>0) msg += `• Clássico x${qty.classico} — ${moeda(cfg.precoBase)}%0A`;
-  if(qty.montado>0) msg += `• Montado x${qty.montado} — ${moeda(cfg.precoMontado)}%0A`;
-
-  if(qty.montado>0){
-    const names = selected.map(k=>k.split(":")[1]);
-    msg += `%0A*✅ Itens do Montado (CONFIRMADO)*%0A`;
-    msg += names.length ? (`• ${encodeURIComponent(names.join(", "))}%0A`) : `• (nenhum item)%0A`;
-    if(montObs) msg += `📝 Obs Montado: ${encodeURIComponent(montObs)}%0A`;
-  }
-
-  const meatLines = [];
-  Object.keys(addMeatQty).forEach(k=>{
-    if(addMeatQty[k]>0) meatLines.push(`${k} x${addMeatQty[k]}`);
-  });
-  if(meatLines.length){
-    msg += `%0A*🥩 Adicionais (+${moeda(cfg.precoAdd)} cada)*%0A`;
-    msg += `• ${encodeURIComponent(meatLines.join(" | "))}%0A`;
-  }
-
-  const bebidaSel = document.getElementById("selBebida");
-  const bebidaVal = Number(bebidaSel.value||0);
-  if(bebidaVal>0){
-    msg += `%0A*🥤 Bebida*%0A`;
-    msg += `• ${encodeURIComponent(bebidaSel.selectedOptions[0].text)}%0A`;
-  }
-
-  msg += `%0A🚚 ${encodeURIComponent(entregaTxt)}%0A`;
-  msg += `🍴 Talher: ${encodeURIComponent(talher)}%0A`;
-  msg += `💳 Pagamento: ${encodeURIComponent(pagamento)}%0A`;
-  if(cfg.pix && pagamento==="PIX") msg += `💠 PIX: ${encodeURIComponent(cfg.pix)}%0A`;
-
-  if(cupomApplied) msg += `🎟 Cupom: ${encodeURIComponent(cupomApplied.code)}%0A`;
-
-  if(pedidoObs) msg += `%0A📝 Observação do pedido: ${encodeURIComponent(pedidoObs)}%0A`;
-
-  msg += `%0A📍 Endereço: ${encodeURIComponent(endereco)}%0A`;
-  msg += `🧭 Referência: ${encodeURIComponent(ref)}%0A%0A`;
-  msg += `💰 *Total: ${encodeURIComponent(totalTxt)}*%0A`;
-  msg += `⏱ Prazo médio: ${encodeURIComponent(cfg.prazo)}`;
-
-  window.open(`https://wa.me/${cfg.whatsapp}?text=${msg}`, "_blank");
-}
-
-/* ========= RESET ========= */
-function limparTudo(scrollTop=true){
-  qty.dia=0; qty.classico=0; qty.montado=0;
-  document.getElementById("q_dia").textContent="0";
-  document.getElementById("q_classico").textContent="0";
-  document.getElementById("q_montado").textContent="0";
-
-  selected=[];
-  document.getElementById("txtMontadoObs").value="";
-  montadoConfirmado=false;
-  setMontadoState();
-
-  Object.keys(addMeatQty).forEach(k=>{
-    addMeatQty[k]=0;
-    const el=document.getElementById("m_"+cssSafe(k));
-    if(el) el.textContent="0";
-  });
-
-  document.getElementById("selBebida").selectedIndex=0;
-  document.getElementById("selTalher").value="0";
-  document.getElementById("selPagamento").value="PIX";
-  document.getElementById("selEntrega").value="0";
-
-  document.getElementById("inpNome").value="";
-  document.getElementById("inpFone").value="";
-  document.getElementById("inpEndereco").value="";
-  document.getElementById("inpRef").value="";
-  document.getElementById("txtPedidoObs").value="";
-
-  cupomApplied=null;
-  discountValue=0;
-  document.getElementById("inpCupom").value="";
-  document.getElementById("cupomInfo").textContent="Nenhum cupom aplicado.";
-
-  refreshPicksUI();
-  calc();
-
-  if(scrollTop) location.hash="#marmitas";
-}
-
-/* ========= CONFIRM UI ========= */
-function setMontadoState(){
-  const status = document.getElementById("montadoStatus");
-  const btn = document.getElementById("confirmBtn");
-  const lists = [document.getElementById("list-dia"), document.getElementById("list-classico")];
-
-  if(montadoConfirmado){
-    status.textContent = "Confirmado (travado)";
-    btn.textContent = "Editar Montado";
-    lists.forEach(l=> l.classList.add("locked"));
-  }else{
-    status.textContent = "Aberto (editável)";
-    btn.textContent = "Confirmar Montado";
-    lists.forEach(l=> l.classList.remove("locked"));
-  }
-}
-
-/* ========= ADMIN ========= */
-const ADMIN_PASS="1234";
-function openAdmin(){
-  document.getElementById("drawerOverlay").classList.add("open");
-  document.getElementById("drawer").classList.add("open");
-  document.getElementById("adminPass").value="";
-  document.getElementById("adminFields").style.display="none";
-  setTimeout(()=>document.getElementById("adminPass").focus(), 120);
-}
-function closeAdmin(){
-  document.getElementById("drawerOverlay").classList.remove("open");
-  document.getElementById("drawer").classList.remove("open");
-}
-document.addEventListener("input",(e)=>{
-  if(e.target && e.target.id==="adminPass"){
-    if(e.target.value===ADMIN_PASS){
-      document.getElementById("adminFields").style.display="block";
-      fillAdminFields();
-    }
-  }
-});
-function fillAdminFields(){
-  document.getElementById("admName").value = cfg.name||"";
-  document.getElementById("admWa").value = cfg.whatsapp||"";
-  document.getElementById("admPBase").value = cfg.precoBase??18;
-  document.getElementById("admPMont").value = cfg.precoMontado??21;
-  document.getElementById("admPAdd").value = cfg.precoAdd??4;
-  document.getElementById("admEnt").value = cfg.entrega??5;
-  document.getElementById("admPrazo").value = cfg.prazo||"30 minutos";
-  document.getElementById("admPix").value = cfg.pix||"";
-
-  document.getElementById("admDiaDesc").value = cfg.diaDesc||"";
-  document.getElementById("admClasDesc").value = cfg.classicoDesc||"";
-  document.getElementById("admDiaItems").value = (cfg.itensDia||[]).join("\n");
-  document.getElementById("admClasItems").value = (cfg.itensClassico||[]).join("\n");
-  document.getElementById("admCarnes").value = (cfg.carnes||[]).join("\n");
-  document.getElementById("admBebidas").value = (cfg.bebidas||[]).map(b=>`${b.name}|${b.price}`).join("\n");
-  document.getElementById("admCupons").value = (cfg.cupons||[]).map(c=>`${c.code}|${c.type}|${c.value}`).join("\n");
-}
-function saveAdmin(){
-  cfg.name = document.getElementById("admName").value.trim() || cfg.name;
-  cfg.whatsapp = document.getElementById("admWa").value.trim() || cfg.whatsapp;
-  cfg.precoBase = Number(document.getElementById("admPBase").value || cfg.precoBase);
-  cfg.precoMontado = Number(document.getElementById("admPMont").value || cfg.precoMontado);
-  cfg.precoAdd = Number(document.getElementById("admPAdd").value || cfg.precoAdd);
-  cfg.entrega = Number(document.getElementById("admEnt").value || cfg.entrega);
-  cfg.prazo = document.getElementById("admPrazo").value.trim() || cfg.prazo;
-  cfg.pix = document.getElementById("admPix").value.trim() || cfg.pix;
-
-  cfg.diaDesc = document.getElementById("admDiaDesc").value.trim();
-  cfg.classicoDesc = document.getElementById("admClasDesc").value.trim();
-
-  cfg.itensDia = document.getElementById("admDiaItems").value.split("\n").map(s=>s.trim()).filter(Boolean);
-  cfg.itensClassico = document.getElementById("admClasItems").value.split("\n").map(s=>s.trim()).filter(Boolean);
-  cfg.carnes = document.getElementById("admCarnes").value.split("\n").map(s=>s.trim()).filter(Boolean);
-
-  const bebidasRaw = document.getElementById("admBebidas").value.split("\n").map(s=>s.trim()).filter(Boolean);
-  const bebidas=[];
-  bebidasRaw.forEach(line=>{
-    const parts=line.split("|");
-    if(parts.length>=2){
-      const name=parts[0].trim();
-      const price=Number(parts[1].trim().replace(",","."));
-      if(name) bebidas.push({name, price:isNaN(price)?0:price});
-    }
-  });
-  if(!bebidas.length) bebidas.push({name:"Nenhum", price:0});
-  cfg.bebidas=bebidas;
-
-  const cuponsRaw = document.getElementById("admCupons").value.split("\n").map(s=>s.trim()).filter(Boolean);
-  const cupons=[];
-  cuponsRaw.forEach(line=>{
-    const p=line.split("|");
-    if(p.length>=3){
-      const code=p[0].trim().toUpperCase();
-      const type=p[1].trim().toUpperCase();
-      const value=Number(String(p[2]).trim().replace(",","."));
-      if(code && type) cupons.push({code, type, value:isNaN(value)?0:value});
-    }
-  });
-  cfg.cupons=cupons;
-
-  restaurants = restaurants.map(r => r.id===cfg.id ? cfg : r);
-  saveStore({restaurants, currentId: cfg.id});
-
-  applyCfgToUI();
-  closeAdmin();
-  toast("Salvo ✅");
-}
-function resetAdmin(){
-  localStorage.removeItem(STORE_KEY);
-  restaurants = RESTAURANTS_DEFAULT;
-  currentId = restaurants[0].id;
-  cfg = restaurants[0];
-  renderRestSelect();
-  applyCfgToUI();
-  closeAdmin();
-  toast("Resetado ✅");
-}
-
-/* ========= INIT ========= */
-function init(){
-  renderRestSelect();
-  applyCfgToUI();
-
-  document.getElementById("selBebida").addEventListener("change", calc);
-  document.getElementById("selEntrega").addEventListener("change", calc);
-  document.getElementById("selTalher").addEventListener("change", calc);
-
-  setMontadoState();
-
-  setTimeout(()=> document.getElementById("splash").classList.add("hide"), 950);
-}
-
-/* ========= Install button (best effort) ========= */
-let deferredPrompt = null;
-window.addEventListener("beforeinstallprompt", (e)=>{
-  e.preventDefault();
-  deferredPrompt = e;
-  const btn = document.getElementById("installBtn");
-  btn.style.display = "inline-flex";
-  btn.onclick = async ()=>{
-    if(!deferredPrompt) return;
-    deferredPrompt.prompt();
-    deferredPrompt = null;
-    btn.style.display = "none";
-  };
-});
-
-init();
 </script>
-
 </body>
 </html>
