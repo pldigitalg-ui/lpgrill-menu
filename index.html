@@ -13,7 +13,6 @@
       --text:#ffffff;
       --muted:#bdbdbd;
       --red:#ff1e1e;
-      --red2:#b80000;
       --line:#242424;
       --good:#25d366;
       --shadow: 0 12px 30px rgba(0,0,0,.35);
@@ -54,7 +53,6 @@
         url("mockup.png");
       background-size:cover;
       background-position:center;
-      filter:saturate(1.05);
       transform:scale(1.02);
       z-index:0;
     }
@@ -73,9 +71,7 @@
       background:#000;
       padding:6px;
     }
-    .brand .title{
-      line-height:1.1;
-    }
+    .brand .title{line-height:1.1}
     .brand .title h1{
       margin:0;
       font-size:18px;
@@ -89,7 +85,7 @@
     }
     .hero-right{
       text-align:right;
-      max-width:420px;
+      max-width:520px;
     }
     .hero-right .badge{
       display:inline-flex;
@@ -106,6 +102,7 @@
       margin:10px 0 0;
       color:#d6d6d6;
       font-size:13px;
+      line-height:1.35;
     }
 
     /* NAV */
@@ -130,7 +127,7 @@
       border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.03);
       color:#fff;
-      font-weight:700;
+      font-weight:800;
       font-size:13px;
       transition:.2s;
     }
@@ -171,58 +168,139 @@
     .muted{color:var(--muted); font-size:13px; line-height:1.35}
     .hr{height:1px; background:var(--line); margin:14px 0}
 
-    /* OPTIONS */
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .opt{
-      flex: 1 1 180px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:12px;
-      padding:12px;
-      cursor:pointer;
-      transition:.2s;
+    /* Sections */
+    .sectionTitle{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:10px;
     }
-    .opt:hover{border-color:rgba(255,30,30,.55); background:rgba(255,30,30,.08)}
-    .opt.active{
-      border-color:rgba(255,30,30,.9);
-      background:rgba(255,30,30,.12);
-      box-shadow: 0 10px 24px rgba(255,30,30,.08);
-    }
-    .opt .top{
-      display:flex; justify-content:space-between; gap:10px; align-items:center;
-      font-weight:800;
-    }
-    .priceTag{
+    .sectionTitle h3{
+      margin:0;
+      font-size:14px;
       color:#fff;
-      background:rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.10);
+      letter-spacing:.2px;
+    }
+    .tag{
       padding:6px 10px;
       border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.25);
+      font-weight:900;
       font-size:12px;
       white-space:nowrap;
     }
-    .opt small{display:block; margin-top:6px; color:var(--muted); font-weight:600}
 
-    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    @media (max-width: 560px){ .grid2{grid-template-columns:1fr} }
-
-    /* CHECKLIST */
-    .checklist{display:grid; gap:8px}
-    .check{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px;
-      padding:10px 12px;
-      background:rgba(255,255,255,.03);
+    /* Quantity */
+    .qtyRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px;
+      border-radius:14px;
       border:1px solid rgba(255,255,255,.08);
-      border-radius:12px;
+      background:rgba(255,255,255,.03);
     }
-    .check label{display:flex; gap:10px; align-items:center; cursor:pointer; width:100%}
-    .check input{transform:scale(1.15)}
-    .check .right{color:var(--muted); font-size:12px; font-weight:700}
+    .qtyRow .left{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .qtyRow .left .name{
+      font-weight:900;
+      font-size:14px;
+    }
+    .qtyRow .left .desc{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.25;
+    }
+    .qtyRow .right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .qtyBtn{
+      width:44px;
+      height:44px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.25);
+      color:#fff;
+      font-weight:900;
+      font-size:18px;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .qtyBtn:hover{border-color:rgba(255,30,30,.55); background:rgba(255,30,30,.10)}
+    .qtyNum{
+      min-width:36px;
+      text-align:center;
+      font-weight:900;
+      font-size:16px;
+    }
+
+    /* Checklist as big buttons */
+    .checklist{display:grid; gap:10px}
+    .pick{
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+      cursor:pointer;
+      transition:.2s;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      user-select:none;
+    }
+    .pick:hover{border-color:rgba(255,30,30,.55); background:rgba(255,30,30,.08)}
+    .pick.active{
+      border-color:rgba(255,30,30,.95);
+      background:rgba(255,30,30,.12);
+      box-shadow: 0 10px 24px rgba(255,30,30,.08);
+    }
+    .pick .name{
+      font-weight:900;
+      font-size:13px;
+    }
+    .pick .meta{
+      color:var(--muted);
+      font-weight:900;
+      font-size:12px;
+      white-space:nowrap;
+    }
+
+    /* Meats with stepper */
+    .addRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+    }
+    .addRow .info{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .addRow .info .name{font-weight:900}
+    .addRow .info .price{color:var(--muted); font-size:12px; font-weight:800}
+    .addRow .step{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
 
     /* FORM */
     .field{display:grid; gap:6px; margin:10px 0}
-    .field label{font-size:12px; color:#dcdcdc; font-weight:800}
+    .field label{font-size:12px; color:#dcdcdc; font-weight:900}
     .field input, .field textarea, .field select{
       width:100%;
       padding:11px 12px;
@@ -259,6 +337,31 @@
     }
     .totalBox .t1{font-weight:900; color:#fff}
     .totalBox .t2{font-weight:900; font-size:20px; color:#fff}
+
+    .lineItem{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 0;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      font-size:13px;
+    }
+    .lineItem:last-child{border-bottom:none}
+    .lineItem .l{color:#eaeaea; font-weight:800}
+    .lineItem .r{color:#eaeaea; font-weight:900}
+
+    .miniBox{
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.22);
+    }
+    .miniBox h4{
+      margin:0 0 10px;
+      font-size:13px;
+      color:#fff;
+      letter-spacing:.2px;
+    }
     .miniList{
       margin:0;
       padding-left:18px;
@@ -288,6 +391,7 @@
       color:#fff;
     }
     .btn-ghost:hover{border-color:rgba(255,30,30,.55); background:rgba(255,30,30,.10)}
+
     .warn{
       padding:10px 12px;
       border-radius:12px;
@@ -298,7 +402,7 @@
       line-height:1.35;
     }
 
-    /* Floating WA */
+    /* Floating */
     .wa-float{
       position:fixed;
       right:18px;
@@ -332,18 +436,21 @@
     </div>
 
     <div class="hero-right">
-      <div class="badge">⏱ Prazo médio de entrega: <b>30 minutos</b> • 🚚 Entrega fixa: <b>R$ 5,00</b></div>
-      <div class="sub">Escolha um marmitex pronto (R$ 18) ou monte o seu prato (R$ 21). Adicionais de carne: +R$ 4 cada.</div>
+      <div class="badge">⏱ Prazo médio: <b>30 minutos</b> • 🚚 Entrega fixa: <b>R$ 5,00</b></div>
+      <div class="sub">
+        Escolha quantas marmitas deseja (Dia / Clássico / Montado).  
+        Marmitex pronto: <b>R$ 18</b> • Montado: <b>R$ 21</b> • Adicional de carne: <b>+R$ 4</b>
+      </div>
     </div>
   </div>
 </header>
 
 <nav>
   <div class="nav-inner">
-    <a class="chip" href="#pedido">Fazer Pedido</a>
-    <a class="chip" href="#cardapios">Cardápios</a>
-    <a class="chip" href="#bebidas">Refrigerantes</a>
-    <a class="chip red" href="#entrega">Entrega/Retirada</a>
+    <a class="chip" href="#marmitas">Marmitas</a>
+    <a class="chip" href="#montar">Montar prato</a>
+    <a class="chip" href="#extras">Adicionais & Bebidas</a>
+    <a class="chip red" href="#entrega">Entrega & Pagamento</a>
   </div>
 </nav>
 
@@ -352,162 +459,233 @@
   <!-- LEFT -->
   <div>
 
-    <!-- Pedido -->
-    <div class="card" id="pedido">
-      <h2>🧾 Monte seu pedido</h2>
+    <div class="card" id="marmitas">
+      <h2>🍱 Marmitas (escolha a quantidade)</h2>
       <p class="muted">
-        Escolha uma opção abaixo. Se quiser <b>montar seu prato</b>, selecione os itens dos cardápios e/ou escreva extras.
-        <br><br>
-        <b>Obs:</b> Ao montar seu prato, o valor do marmitex fica <b>R$ 18 + R$ 3 = R$ 21</b>.
+        Você pode pedir <b>as 3 opções juntas</b>.  
+        Prato do Dia e Clássico são <b>fixos</b> (não precisa marcar itens).
       </p>
 
-      <div class="row" style="margin-top:12px">
-        <div class="opt" id="opt-dia" onclick="setTipo('dia')">
-          <div class="top">
-            <span>🍛 Marmitex do Dia (pronto)</span>
-            <span class="priceTag">R$ 18,00</span>
-          </div>
-          <small>Cardápio do dia já montado.</small>
-        </div>
+      <div class="hr"></div>
 
-        <div class="opt" id="opt-classico" onclick="setTipo('classico')">
-          <div class="top">
-            <span>🥘 Marmitex Clássico (pronto)</span>
-            <span class="priceTag">R$ 18,00</span>
-          </div>
-          <small>Clássico já montado.</small>
+      <!-- Dia -->
+      <div class="sectionTitle">
+        <div>
+          <h3>🍛 Marmitex do Dia</h3>
+          <div class="muted">Arroz, feijão, macarrão, batata frita, frango assado, salada (alface e tomate).</div>
         </div>
+        <div class="tag">R$ 18,00</div>
+      </div>
 
-        <div class="opt" id="opt-montado" onclick="setTipo('montado')">
-          <div class="top">
-            <span>🧩 Montar meu prato</span>
-            <span class="priceTag">R$ 21,00</span>
-          </div>
-          <small>R$ 18 + R$ 3 (montagem).</small>
+      <div class="qtyRow">
+        <div class="left">
+          <div class="name">Quantidade</div>
+          <div class="desc">Marmitex do Dia (pronto)</div>
+        </div>
+        <div class="right">
+          <button class="qtyBtn" onclick="qtyChange('dia', -1)">−</button>
+          <div class="qtyNum" id="q_dia">0</div>
+          <button class="qtyBtn" onclick="qtyChange('dia', 1)">+</button>
         </div>
       </div>
 
       <div class="hr"></div>
 
-      <div class="grid2">
+      <!-- Clássico -->
+      <div class="sectionTitle">
         <div>
-          <h2 id="cardapios" style="margin-top:0">📋 Cardápios</h2>
-          <p class="muted" style="margin-top:-2px">
-            <b>Se você escolher “Montar meu prato”</b>, marque os itens que deseja (misture os dois cardápios).
-          </p>
-
-          <div class="card" style="padding:12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.08)">
-            <h2 style="margin:0 0 10px; font-size:14px; color:#fff">🍛 Cardápio do Dia</h2>
-            <div class="checklist" id="list-dia">
-              <!-- items inserted by JS -->
-            </div>
-          </div>
-
-          <div style="height:12px"></div>
-
-          <div class="card" style="padding:12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.08)">
-            <h2 style="margin:0 0 10px; font-size:14px; color:#fff">🥘 Cardápio Clássico</h2>
-            <div class="checklist" id="list-classico">
-              <!-- items inserted by JS -->
-            </div>
-          </div>
-
-          <div class="field">
-            <label>✍️ Caso queira montar seu prato, escreva os itens que deseja adicionar</label>
-            <textarea id="txtExtras" placeholder="Ex: mais salada, sem macarrão, pouco feijão, etc..."></textarea>
-            <div class="hint">Você pode misturar os dois cardápios. Se escolher “Montar meu prato”, o sistema já soma +R$ 3.</div>
-          </div>
-
+          <h3>🥘 Marmitex Clássico</h3>
+          <div class="muted">Arroz, feijão, frango com quiabo, angu, couve, salada (tomate).</div>
         </div>
+        <div class="tag">R$ 18,00</div>
+      </div>
 
+      <div class="qtyRow">
+        <div class="left">
+          <div class="name">Quantidade</div>
+          <div class="desc">Marmitex Clássico (pronto)</div>
+        </div>
+        <div class="right">
+          <button class="qtyBtn" onclick="qtyChange('classico', -1)">−</button>
+          <div class="qtyNum" id="q_classico">0</div>
+          <button class="qtyBtn" onclick="qtyChange('classico', 1)">+</button>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <!-- Montado -->
+      <div class="sectionTitle">
         <div>
-          <h2 style="margin-top:0">🥩 Adicionais de carne (+R$ 4 cada)</h2>
-          <div class="checklist" id="list-carnes">
-            <!-- meats by JS -->
-          </div>
-
-          <div class="hr"></div>
-
-          <h2 id="bebidas" style="margin-top:0">🥤 Refrigerantes</h2>
-          <div class="field">
-            <label>Escolha um refrigerante</label>
-            <select id="selBebida">
-              <option value="0">Nenhum</option>
-              <option value="10">Coca-Cola 1L — R$ 10</option>
-              <option value="10">Fanta 1L — R$ 10</option>
-              <option value="18">Coca-Cola 2L — R$ 18</option>
-            </select>
-          </div>
-
-          <div class="hr"></div>
-
-          <h2 id="entrega" style="margin-top:0">🚚 Entrega / Retirada</h2>
-          <div class="row">
-            <div class="opt" id="opt-retirada" onclick="setEntrega('retirada')">
-              <div class="top">
-                <span>📍 Retirada no local</span>
-                <span class="priceTag">GRÁTIS</span>
-              </div>
-              <small>Você retira no restaurante.</small>
-            </div>
-
-            <div class="opt" id="opt-entrega" onclick="setEntrega('entrega')">
-              <div class="top">
-                <span>🏍️ Entrega</span>
-                <span class="priceTag">+ R$ 5,00</span>
-              </div>
-              <small>Taxa fixa de entrega.</small>
-            </div>
-          </div>
-
-          <div class="hr"></div>
-
-          <h2 style="margin-top:0">📍 Dados para entrega</h2>
-          <div class="field">
-            <label>Seu nome</label>
-            <input id="inpNome" placeholder="Ex: João Silva" />
-          </div>
-          <div class="field">
-            <label>Número de telefone</label>
-            <input id="inpFone" placeholder="Ex: (31) 9xxxx-xxxx" />
-          </div>
-          <div class="field">
-            <label>Endereço completo</label>
-            <input id="inpEndereco" placeholder="Rua, número, bairro, cidade" />
-          </div>
-          <div class="field">
-            <label>Ponto de referência</label>
-            <input id="inpRef" placeholder="Ex: perto da padaria / portão azul" />
-          </div>
-
-          <div class="warn">
-            ✅ Confirme tudo antes de enviar. O pedido vai direto para o WhatsApp.  
-            <br>⏱ Prazo médio: <b>30 minutos</b>.
-          </div>
-
+          <h3>🧩 Montar seu prato</h3>
+          <div class="muted">Escolha itens abaixo. Eles aparecem em “Monte seu cardápio” para conferir.</div>
         </div>
+        <div class="tag">R$ 21,00</div>
+      </div>
+
+      <div class="qtyRow">
+        <div class="left">
+          <div class="name">Quantidade</div>
+          <div class="desc">Marmitex Montado (personalizado)</div>
+        </div>
+        <div class="right">
+          <button class="qtyBtn" onclick="qtyChange('montado', -1)">−</button>
+          <div class="qtyNum" id="q_montado">0</div>
+          <button class="qtyBtn" onclick="qtyChange('montado', 1)">+</button>
+        </div>
+      </div>
+
+      <div class="hint">
+        Obs: Itens para montar o prato só precisam ser escolhidos se a quantidade de <b>Montado</b> for maior que 0.
+      </div>
+    </div>
+
+    <div style="height:16px"></div>
+
+    <!-- Montar -->
+    <div class="card" id="montar">
+      <h2>✅ Montar seu prato (selecione os itens)</h2>
+      <p class="muted">
+        Caso queira montar seu prato, clique nas opções abaixo.  
+        Você pode <b>misturar os dois cardápios</b>. Tudo vai aparecer em <b>“Monte seu cardápio”</b> para você conferir.
+      </p>
+
+      <div class="hr"></div>
+
+      <div class="card" style="padding:12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.08)">
+        <div class="sectionTitle">
+          <h3>🍛 Opções do Cardápio do Dia</h3>
+          <div class="tag">clique para marcar</div>
+        </div>
+        <div class="checklist" id="list-dia"></div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="card" style="padding:12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.08)">
+        <div class="sectionTitle">
+          <h3>🥘 Opções do Cardápio Clássico</h3>
+          <div class="tag">clique para marcar</div>
+        </div>
+        <div class="checklist" id="list-classico"></div>
+      </div>
+
+      <div class="field" style="margin-top:14px;">
+        <label>✍️ Itens/ajustes do prato montado (opcional)</label>
+        <textarea id="txtMontadoObs" placeholder="Ex: sem macarrão, pouco feijão, mais salada, etc..."></textarea>
+        <div class="hint">Este campo é só para o <b>prato montado</b>. Observação geral do pedido fica em outro campo.</div>
+      </div>
+
+      <div class="miniBox" style="margin-top:12px;">
+        <h4>🧾 Monte seu cardápio (confira aqui)</h4>
+        <ul class="miniList" id="cardapioEscolhido"></ul>
+        <div class="warn" style="margin-top:10px;">
+          Se o item estiver correto, é só enviar o pedido no WhatsApp (o sistema manda tudo certinho).
+        </div>
+      </div>
+    </div>
+
+    <div style="height:16px"></div>
+
+    <!-- Extras -->
+    <div class="card" id="extras">
+      <h2>🥩 Adicionais & 🥤 Refrigerantes</h2>
+
+      <div class="muted">Adicionais de carne: <b>+ R$ 4</b> cada (você define a quantidade).</div>
+
+      <div class="hr"></div>
+
+      <div class="checklist" id="list-carnes"></div>
+
+      <div class="hr"></div>
+
+      <div class="field">
+        <label>Refrigerantes</label>
+        <select id="selBebida">
+          <option value="0">Nenhum</option>
+          <option value="10">Coca-Cola 1L — R$ 10</option>
+          <option value="10">Fanta 1L — R$ 10</option>
+          <option value="18">Coca-Cola 2L — R$ 18</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="height:16px"></div>
+
+    <!-- Entrega -->
+    <div class="card" id="entrega">
+      <h2>🚚 Entrega • 💳 Pagamento • 📍 Dados</h2>
+
+      <div class="hr"></div>
+
+      <div class="field">
+        <label>Entrega / Retirada</label>
+        <select id="selEntrega">
+          <option value="0">Retirada no local — GRÁTIS</option>
+          <option value="5">Entrega — taxa fixa R$ 5,00</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Forma de pagamento</label>
+        <select id="selPagamento">
+          <option value="PIX">PIX</option>
+          <option value="Dinheiro">Dinheiro</option>
+          <option value="Cartão">Cartão</option>
+        </select>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="field">
+        <label>Seu nome</label>
+        <input id="inpNome" placeholder="Ex: João Silva" />
+      </div>
+
+      <div class="field">
+        <label>Número de telefone (obrigatório)</label>
+        <input id="inpFone" placeholder="Ex: (31) 9xxxx-xxxx" />
+      </div>
+
+      <div class="field">
+        <label>Endereço completo (obrigatório)</label>
+        <input id="inpEndereco" placeholder="Rua, número, bairro, cidade" />
+      </div>
+
+      <div class="field">
+        <label>Ponto de referência (obrigatório)</label>
+        <input id="inpRef" placeholder="Ex: perto da padaria / portão azul" />
+      </div>
+
+      <div class="field">
+        <label>📝 Observação do pedido (geral)</label>
+        <textarea id="txtPedidoObs" placeholder="Ex: sem cebola, mandar talher, chamar no portão, etc..."></textarea>
+      </div>
+
+      <div class="warn">
+        ✅ Confirme tudo antes de enviar. O pedido vai direto para o WhatsApp.  
+        <br>⏱ Prazo médio: <b>30 minutos</b>.
       </div>
     </div>
 
   </div>
 
-  <!-- RIGHT (Summary) -->
+  <!-- RIGHT -->
   <div class="summary">
     <div class="card">
-      <h2>💰 Resumo do pedido</h2>
+      <h2>💰 Total & Resumo (estilo iFood)</h2>
 
       <div class="totalBox">
         <div>
           <div class="t1">Total</div>
-          <div class="muted">Soma automática (marmitex + adicionais + bebida + entrega)</div>
+          <div class="muted">valor base + adicionais + bebida + entrega</div>
         </div>
         <div class="t2" id="total">R$ 0,00</div>
       </div>
 
       <div class="hr"></div>
 
-      <div class="muted" style="font-weight:900; margin-bottom:6px;">Selecionados:</div>
-      <ul class="miniList" id="miniList"></ul>
+      <div id="lineItems"></div>
 
       <div class="hr"></div>
 
@@ -518,29 +696,28 @@
       <div style="height:10px"></div>
 
       <button class="btn btn-ghost" onclick="limparTudo()">
-        Limpar seleção
+        Limpar tudo
       </button>
 
       <div class="hint">
-        * Marmitex pronto: <b>R$ 18</b> • Montado: <b>R$ 21</b> • Adicional de carne: <b>+R$ 4</b> • Entrega: <b>+R$ 5</b>
+        Marmitex Dia: <b>R$ 18</b> • Clássico: <b>R$ 18</b> • Montado: <b>R$ 21</b> • Adicional: <b>+R$ 4</b> • Entrega: <b>+R$ 5</b>
       </div>
     </div>
   </div>
 
 </div>
 
-<a class="wa-float" href="#pedido">
+<a class="wa-float" href="#marmitas">
   🧾 <span>Fazer pedido</span> <small>agora</small>
 </a>
 
 <script>
   // ===== CONFIG =====
   const WHATSAPP_NUMBER = "5531998064556";
-
-  const BASE_MARMITEX = 18;
-  const MONTA_SOBRETAXA = 3; // montar seu prato
-  const ENTREGA_TAXA = 5;
-  const CARNE_ADICIONAL = 4;
+  const PRECO_DIA = 18;
+  const PRECO_CLASSICO = 18;
+  const PRECO_MONTADO = 21;
+  const PRECO_CARNE_ADD = 4;
 
   const itensDia = [
     "Arroz",
@@ -567,22 +744,23 @@
   ];
 
   // ===== STATE =====
-  let tipo = "dia";        // dia | classico | montado
-  let entrega = "retirada"; // retirada | entrega
+  const qty = { dia: 0, classico: 0, montado: 0 };
+  const selected = new Set(); // itens do montado
+  const addMeatQty = { "Bife de boi": 0, "Bife de porco": 0, "Omelete": 0 };
 
-  // ===== INIT =====
-  function renderList(containerId, items, prefix){
+  // ===== HELPERS =====
+  function moeda(v){ return "R$ " + v.toFixed(2).replace(".", ","); }
+  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+  function renderPickList(containerId, items, group){
     const el = document.getElementById(containerId);
     el.innerHTML = "";
-    items.forEach((name, idx) => {
-      const id = `${prefix}_${idx}`;
+    items.forEach((name) => {
+      const key = `${group}:${name}`;
       el.innerHTML += `
-        <div class="check">
-          <label for="${id}">
-            <input type="checkbox" id="${id}" data-name="${escapeHtml(name)}" onchange="calc()" />
-            <span>${escapeHtml(name)}</span>
-          </label>
-          <span class="right">item</span>
+        <div class="pick" id="${cssSafe(key)}" onclick="togglePick('${escapeJs(key)}')">
+          <div class="name">${escapeHtml(name)}</div>
+          <div class="meta">TOQUE PARA SELECIONAR</div>
         </div>
       `;
     });
@@ -591,139 +769,143 @@
   function renderMeats(){
     const el = document.getElementById("list-carnes");
     el.innerHTML = "";
-    carnes.forEach((name, idx) => {
-      const id = `carne_${idx}`;
+    carnes.forEach((name) => {
       el.innerHTML += `
-        <div class="check">
-          <label for="${id}">
-            <input type="checkbox" id="${id}" data-name="${escapeHtml(name)}" onchange="calc()" />
-            <span>${escapeHtml(name)}</span>
-          </label>
-          <span class="right">+ R$ ${CARNE_ADICIONAL.toFixed(2).replace(".", ",")}</span>
+        <div class="addRow">
+          <div class="info">
+            <div class="name">${escapeHtml(name)}</div>
+            <div class="price">+ ${moeda(PRECO_CARNE_ADD)} cada</div>
+          </div>
+          <div class="step">
+            <button class="qtyBtn" onclick="meatChange('${escapeJs(name)}', -1)">−</button>
+            <div class="qtyNum" id="m_${cssSafe(name)}">0</div>
+            <button class="qtyBtn" onclick="meatChange('${escapeJs(name)}', 1)">+</button>
+          </div>
         </div>
       `;
     });
   }
 
+  function cssSafe(s){
+    return s.replace(/[^a-zA-Z0-9\-_:.]/g, "_");
+  }
   function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, (m) => ({
       "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
     }[m]));
   }
+  function escapeJs(str){
+    return String(str).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+  }
 
-  renderList("list-dia", itensDia, "dia");
-  renderList("list-classico", itensClassico, "classico");
+  // ===== INIT =====
+  renderPickList("list-dia", itensDia, "dia");
+  renderPickList("list-classico", itensClassico, "classico");
   renderMeats();
 
-  setTipo("dia");
-  setEntrega("retirada");
+  // ===== QUANTITY =====
+  function qtyChange(type, delta){
+    qty[type] = clamp(qty[type] + delta, 0, 20);
+    document.getElementById("q_" + type).innerText = qty[type];
 
-  // ===== UI SETTERS =====
-  function setTipo(value){
-    tipo = value;
-
-    // highlight
-    document.getElementById("opt-dia").classList.toggle("active", tipo==="dia");
-    document.getElementById("opt-classico").classList.toggle("active", tipo==="classico");
-    document.getElementById("opt-montado").classList.toggle("active", tipo==="montado");
-
-    // If not montado, we can still allow marking items (optional),
-    // but we will only add the +3 when montado is chosen.
-    calc();
-  }
-
-  function setEntrega(value){
-    entrega = value;
-
-    document.getElementById("opt-retirada").classList.toggle("active", entrega==="retirada");
-    document.getElementById("opt-entrega").classList.toggle("active", entrega==="entrega");
+    // se montado zerou, desmarca itens
+    if(type === "montado" && qty.montado === 0){
+      selected.clear();
+      document.getElementById("txtMontadoObs").value = "";
+      refreshPicksUI();
+    }
 
     calc();
   }
 
-  // ===== CALC =====
-  function moeda(v){
-    return "R$ " + v.toFixed(2).replace(".", ",");
-  }
-
-  function getCheckedNames(prefix, count){
-    const names = [];
-    for(let i=0;i<count;i++){
-      const cb = document.getElementById(`${prefix}_${i}`);
-      if(cb && cb.checked) names.push(cb.dataset.name);
+  // ===== PICK (only meaningful if montado qty > 0) =====
+  function togglePick(key){
+    if(qty.montado === 0){
+      alert("Para montar seu prato, primeiro aumente a quantidade de Marmitex Montado (+).");
+      return;
     }
-    return names;
+
+    if(selected.has(key)) selected.delete(key);
+    else selected.add(key);
+
+    refreshPicksUI();
+    calc();
   }
 
-  function getCheckedMeats(){
-    const names = [];
-    for(let i=0;i<carnes.length;i++){
-      const cb = document.getElementById(`carne_${i}`);
-      if(cb && cb.checked) names.push(cb.dataset.name);
+  function refreshPicksUI(){
+    // atualizar visual ativo/inativo
+    const all = [...itensDia.map(x => `dia:${x}`), ...itensClassico.map(x => `classico:${x}`)];
+    all.forEach((k) => {
+      const el = document.getElementById(cssSafe(k));
+      if(el) el.classList.toggle("active", selected.has(k));
+    });
+
+    // atualizar box "Monte seu cardápio"
+    const ul = document.getElementById("cardapioEscolhido");
+    ul.innerHTML = "";
+
+    const chosen = [...selected].map(k => k.split(":")[1]);
+    if(chosen.length === 0){
+      const li = document.createElement("li");
+      li.textContent = "Nenhum item selecionado ainda.";
+      ul.appendChild(li);
+    } else {
+      chosen.forEach((name) => {
+        const li = document.createElement("li");
+        li.textContent = name;
+        ul.appendChild(li);
+      });
     }
-    return names;
   }
 
+  // ===== MEATS =====
+  function meatChange(name, delta){
+    addMeatQty[name] = clamp((addMeatQty[name] || 0) + delta, 0, 20);
+    document.getElementById("m_" + cssSafe(name)).innerText = addMeatQty[name];
+    calc();
+  }
+
+  // ===== CALC & SUMMARY =====
   function calc(){
-    // base marmitex
-    let total = BASE_MARMITEX;
+    const entregaVal = Number(document.getElementById("selEntrega").value || 0);
+    const bebidaVal = Number(document.getElementById("selBebida").value || 0);
 
-    // montagem
-    if(tipo === "montado") total += MONTA_SOBRETAXA;
+    const subtotalDia = qty.dia * PRECO_DIA;
+    const subtotalClassico = qty.classico * PRECO_CLASSICO;
+    const subtotalMontado = qty.montado * PRECO_MONTADO;
 
-    // bebidas
-    const bebidaValor = Number(document.getElementById("selBebida").value || 0);
-    total += bebidaValor;
+    let meatsTotalQty = 0;
+    let meatsTotal = 0;
+    for(const k of Object.keys(addMeatQty)){
+      meatsTotalQty += addMeatQty[k];
+      meatsTotal += addMeatQty[k] * PRECO_CARNE_ADD;
+    }
 
-    // entrega
-    if(entrega === "entrega") total += ENTREGA_TAXA;
-
-    // carnes adicionais
-    const meats = getCheckedMeats();
-    total += meats.length * CARNE_ADICIONAL;
-
-    // resumo
+    const total = subtotalDia + subtotalClassico + subtotalMontado + meatsTotal + bebidaVal + entregaVal;
     document.getElementById("total").innerText = moeda(total);
 
-    const mini = document.getElementById("miniList");
-    mini.innerHTML = "";
+    // line items estilo iFood
+    const liBox = document.getElementById("lineItems");
+    liBox.innerHTML = "";
 
-    const tipoTxt = (tipo==="dia") ? "Marmitex do Dia (pronto)" :
-                    (tipo==="classico") ? "Marmitex Clássico (pronto)" :
-                    "Montar meu prato";
+    const addLine = (label, value) => {
+      const div = document.createElement("div");
+      div.className = "lineItem";
+      div.innerHTML = `<div class="l">${label}</div><div class="r">${value}</div>`;
+      liBox.appendChild(div);
+    };
 
-    addLi(mini, `🍱 ${tipoTxt} — ${moeda(BASE_MARMITEX + (tipo==="montado" ? MONTA_SOBRETAXA : 0))}`);
+    if(qty.dia > 0) addLine(`🍛 Marmitex do Dia x${qty.dia}`, moeda(subtotalDia));
+    if(qty.classico > 0) addLine(`🥘 Marmitex Clássico x${qty.classico}`, moeda(subtotalClassico));
+    if(qty.montado > 0) addLine(`🧩 Marmitex Montado x${qty.montado}`, moeda(subtotalMontado));
 
-    if(tipo === "montado"){
-      const diaSel = getCheckedNames("dia", itensDia.length);
-      const claSel = getCheckedNames("classico", itensClassico.length);
-      const allSel = [...diaSel, ...claSel];
+    if(meatsTotalQty > 0) addLine(`🥩 Adicionais de carne (x${meatsTotalQty})`, moeda(meatsTotal));
+    if(bebidaVal > 0) addLine(`🥤 Refrigerante`, moeda(bebidaVal));
+    if(entregaVal > 0) addLine(`🚚 Entrega`, moeda(entregaVal));
+    if(total === 0) addLine(`Nenhum item selecionado`, `—`);
 
-      if(allSel.length){
-        addLi(mini, "✅ Itens marcados: " + allSel.join(", "));
-      } else {
-        addLi(mini, "✅ Itens marcados: (nenhum marcado ainda)");
-      }
-
-      const extras = document.getElementById("txtExtras").value.trim();
-      if(extras) addLi(mini, "✍️ Observações: " + extras);
-    }
-
-    if(meats.length){
-      addLi(mini, `🥩 Adicionais: ${meats.join(", ")} — ${moeda(meats.length * CARNE_ADICIONAL)}`);
-    }
-
-    const bebidaTxt = document.getElementById("selBebida").selectedOptions[0].text;
-    if(bebidaValor > 0) addLi(mini, `🥤 ${bebidaTxt}`);
-
-    if(entrega === "entrega") addLi(mini, `🚚 Entrega — ${moeda(ENTREGA_TAXA)}`);
-    else addLi(mini, "📍 Retirada no local — grátis");
-  }
-
-  function addLi(ul, text){
-    const li = document.createElement("li");
-    li.textContent = text;
-    ul.appendChild(li);
+    // atualizar box cardapio escolhido
+    refreshPicksUI();
   }
 
   // ===== WHATSAPP SEND =====
@@ -732,55 +914,68 @@
     const fone = document.getElementById("inpFone").value.trim();
     const endereco = document.getElementById("inpEndereco").value.trim();
     const ref = document.getElementById("inpRef").value.trim();
+    const pagamento = document.getElementById("selPagamento").value;
+    const entregaVal = Number(document.getElementById("selEntrega").value || 0);
+    const entregaTxt = (entregaVal > 0) ? "Entrega (taxa R$ 5,00)" : "Retirada no local (grátis)";
+    const pedidoObs = document.getElementById("txtPedidoObs").value.trim();
 
-    // validação simples
     if(!fone || !endereco || !ref){
       alert("Preencha: telefone, endereço e ponto de referência.");
       return;
     }
 
-    // recalcula total atual
+    // se montado tem qty mas sem itens, ok, mas avisa
+    if(qty.montado > 0 && selected.size === 0 && !document.getElementById("txtMontadoObs").value.trim()){
+      const ok = confirm("Você selecionou Marmitex Montado, mas não marcou itens nem escreveu ajustes. Deseja continuar mesmo assim?");
+      if(!ok) return;
+    }
+
+    // Total atual
     const totalTxt = document.getElementById("total").innerText;
 
-    const tipoTxt = (tipo==="dia") ? "Marmitex do Dia (pronto)" :
-                    (tipo==="classico") ? "Marmitex Clássico (pronto)" :
-                    "Montar meu prato (R$ 18 + R$ 3)";
-
-    const meats = getCheckedMeats();
-    const bebidaSel = document.getElementById("selBebida");
-    const bebidaValor = Number(bebidaSel.value || 0);
-    const bebidaTxt = bebidaSel.selectedOptions[0].text;
-
+    // montar mensagem
     let msg = "";
     msg += "🧾 *PEDIDO - LP GRILL*%0A";
     if(nome) msg += "👤 Nome: " + encodeURIComponent(nome) + "%0A";
     msg += "📞 Telefone: " + encodeURIComponent(fone) + "%0A%0A";
 
-    msg += "🍱 Opção: " + encodeURIComponent(tipoTxt) + "%0A";
+    msg += "*🍱 Marmitas*%0A";
+    if(qty.dia > 0) msg += "• Marmitex do Dia x" + qty.dia + " — R$ 18,00%0A";
+    if(qty.classico > 0) msg += "• Marmitex Clássico x" + qty.classico + " — R$ 18,00%0A";
+    if(qty.montado > 0) msg += "• Marmitex Montado x" + qty.montado + " — R$ 21,00%0A";
 
-    if(tipo === "montado"){
-      const diaSel = getCheckedNames("dia", itensDia.length);
-      const claSel = getCheckedNames("classico", itensClassico.length);
-      const allSel = [...diaSel, ...claSel];
-
-      msg += "✅ Itens marcados: " + encodeURIComponent(allSel.length ? allSel.join(", ") : "nenhum") + "%0A";
-
-      const extras = document.getElementById("txtExtras").value.trim();
-      if(extras) msg += "✍️ Observações: " + encodeURIComponent(extras) + "%0A";
-      msg += "%0A";
+    if(qty.montado > 0){
+      const chosen = [...selected].map(k => k.split(":")[1]);
+      msg += "%0A*✅ Itens do Montado*%0A";
+      msg += chosen.length ? ("• " + encodeURIComponent(chosen.join(", ")) + "%0A") : "• (nenhum item marcado)%0A";
+      const montObs = document.getElementById("txtMontadoObs").value.trim();
+      if(montObs) msg += "✍️ Ajustes do Montado: " + encodeURIComponent(montObs) + "%0A";
     }
 
-    if(meats.length){
-      msg += "🥩 Adicionais (+R$ 4 cada): " + encodeURIComponent(meats.join(", ")) + "%0A";
+    // carnes adicionais
+    const meatLines = [];
+    for(const k of Object.keys(addMeatQty)){
+      if(addMeatQty[k] > 0) meatLines.push(`${k} x${addMeatQty[k]}`);
+    }
+    if(meatLines.length){
+      msg += "%0A*🥩 Adicionais (+R$ 4 cada)*%0A";
+      msg += "• " + encodeURIComponent(meatLines.join(" | ")) + "%0A";
     }
 
-    if(bebidaValor > 0){
-      msg += "🥤 Refrigerante: " + encodeURIComponent(bebidaTxt) + "%0A";
+    // bebida
+    const bebidaSel = document.getElementById("selBebida");
+    const bebidaVal = Number(bebidaSel.value || 0);
+    if(bebidaVal > 0){
+      msg += "%0A*🥤 Refrigerante*%0A";
+      msg += "• " + encodeURIComponent(bebidaSel.selectedOptions[0].text) + "%0A";
     }
 
-    msg += (entrega === "entrega")
-      ? "🚚 Entrega: +R$ 5,00%0A"
-      : "📍 Retirada: grátis%0A";
+    msg += "%0A*🚚 " + encodeURIComponent(entregaTxt) + "*%0A";
+    msg += "💳 Pagamento: " + encodeURIComponent(pagamento) + "%0A";
+
+    if(pedidoObs){
+      msg += "%0A📝 Observação do pedido: " + encodeURIComponent(pedidoObs) + "%0A";
+    }
 
     msg += "%0A📍 Endereço: " + encodeURIComponent(endereco) + "%0A";
     msg += "🧭 Referência: " + encodeURIComponent(ref) + "%0A%0A";
@@ -794,31 +989,41 @@
 
   // ===== RESET =====
   function limparTudo(){
-    setTipo("dia");
-    setEntrega("retirada");
-    document.getElementById("selBebida").value = "0";
-    document.getElementById("txtExtras").value = "";
+    qty.dia = 0; qty.classico = 0; qty.montado = 0;
+    document.getElementById("q_dia").innerText = "0";
+    document.getElementById("q_classico").innerText = "0";
+    document.getElementById("q_montado").innerText = "0";
 
-    // uncheck all
-    for(let i=0;i<itensDia.length;i++) document.getElementById(`dia_${i}`).checked = false;
-    for(let i=0;i<itensClassico.length;i++) document.getElementById(`classico_${i}`).checked = false;
-    for(let i=0;i<carnes.length;i++) document.getElementById(`carne_${i}`).checked = false;
+    selected.clear();
+    document.getElementById("txtMontadoObs").value = "";
+
+    for(const k of Object.keys(addMeatQty)){
+      addMeatQty[k] = 0;
+      const el = document.getElementById("m_" + cssSafe(k));
+      if(el) el.innerText = "0";
+    }
+
+    document.getElementById("selBebida").value = "0";
+    document.getElementById("selEntrega").value = "0";
+    document.getElementById("selPagamento").value = "PIX";
 
     document.getElementById("inpNome").value = "";
     document.getElementById("inpFone").value = "";
     document.getElementById("inpEndereco").value = "";
     document.getElementById("inpRef").value = "";
+    document.getElementById("txtPedidoObs").value = "";
 
+    refreshPicksUI();
     calc();
-    window.location.hash = "#pedido";
+    window.location.hash = "#marmitas";
   }
 
-  // calc initial
+  // listeners
   document.getElementById("selBebida").addEventListener("change", calc);
-  document.getElementById("txtExtras").addEventListener("input", () => {
-    // só recalcular para atualizar o resumo, não muda preço
-    calc();
-  });
+  document.getElementById("selEntrega").addEventListener("change", calc);
+
+  // init
+  refreshPicksUI();
   calc();
 </script>
 
